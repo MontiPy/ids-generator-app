@@ -20,7 +20,10 @@ import {
   Paper,
   Stack,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
+  Tooltip,
+  Radio,
+  RadioGroup
 } from '@mui/material';
 import { Edit, Delete } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
@@ -63,13 +66,13 @@ export default function IDSApp() {
     partNumber: '',
     partName: '',
     supplier: '',
-    sideLeft: false,
-    sideRight: false,
     model: '',
     event: '',
     facility: '',
     drawingRank: '',
     regulationPart: '',
+    sideLeft: false,
+    sideRight: false,
     dpRegular: false,
     dpNewModel: false,
     dpProblem: false,
@@ -88,6 +91,7 @@ export default function IDSApp() {
   const [formValues, setFormValues] = useState({
     name: '',
     toleranceType: '',
+    itemType: 'Variable',
     nominal: '',
     usl: '',
     lsl: '',
@@ -129,7 +133,7 @@ export default function IDSApp() {
     setFormValues(prev => ({
       ...prev,
       [name]: value
-    }));
+    })); console.log(formValues.itemType)
   };
 
   // ---------------------------------------------------------------------------
@@ -513,7 +517,7 @@ export default function IDSApp() {
         <Card sx={{ minWidth: 250 }}>
           <CardContent>
             <Typography variant="subtitle1" gutterBottom>
-              {editGroupId ? 'Edit' : 'Add'} Item
+              {editGroupId ? 'Edit' : 'Add'} Inspection Item
             </Typography>
             <Stack spacing={1}>
               {/* Tolerance Type dropdown */}
@@ -539,11 +543,30 @@ export default function IDSApp() {
               <TextField
                 size="small"
                 fullWidth
-                label="Item"
+                label="Inspection Item"
                 name="name"
                 value={formValues.name}
                 onChange={handleInputChange}
               />
+              <FormControl component="fieldset" size="small">
+                  <RadioGroup
+                    row
+                    name="itemType"
+                    value={formValues.itemType}
+                    onChange={handleInputChange}
+                  >
+                    <FormControlLabel
+                      value="Variable"
+                      control={<Radio />}
+                      label="Variable"
+                    />
+                    <FormControlLabel
+                      value="Attribute"
+                      control={<Radio />}
+                      label="Attribute"
+                    />
+                  </RadioGroup>
+                </FormControl>
               <Stack direction="row" spacing={1}>
                 <TextField
                   size="small"
@@ -556,21 +579,27 @@ export default function IDSApp() {
                   size="small"
                   label="USL"
                   name="usl"
-                  value={formValues.usl}
+                  value={formValues.itemType === 'Attribute' ? 'NG' : formValues.usl}
                   onChange={handleInputChange}
+                  disabled={formValues.itemType === 'Attribute'}
                 />
                 <TextField
                   size="small"
                   label="LSL"
                   name="lsl"
-                  value={formValues.lsl}
+                  value={formValues.itemType === 'Attribute' ? 'OK' : formValues.lsl}
                   onChange={handleInputChange}
-                  disabled={isLSLDisabled}
+                  disabled={formValues.itemType === 'Attribute' || isLSLDisabled}
                 />
               </Stack>
 
               {/* Control Plan dropdown */}
-              <FormControl fullWidth size="small">
+              <Tooltip title={<>Mark N/A if the point is not a CCP or KQP <br/><br/>
+              CCP and KQP points are identified to ensure visibility of these items is maintained. <br/><br/>
+              CCP (Critical Control Point)- These line items are critical points that require variable data and statistical analysis to ensure part performance.  Typically these points are identified by the PACV or are a Q-point.  The supplier can denote an item as critical as well.  Items deemed critical should not be deleted from the IDS at any time.<br/><br/>
+              KQP (Key Quality Point)- These line items are key points that ensure part performance, but do not require statistical analysis.  The supplier can denote an item as a KQP as well.  Line items deemed as a KQP should not be deleted from the IDS at any time.<br/><br/>
+              GMP (Global Measurement Point)- These line items are global standards across shared models.</>}>
+                <FormControl fullWidth size="small">
                 <InputLabel id="cp-label">CCP/KQP/GMP</InputLabel>
                 <Select
                   labelId="cp-label"
@@ -586,33 +615,34 @@ export default function IDSApp() {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+                </FormControl>
+              </Tooltip>
 
               {/* Method, Sample & Frequency, Reporting Frequency */}
-              <TextField
+              <Tooltip title="What measurement device will take the data?"><TextField
                 size="small"
                 fullWidth
                 label="Method"
                 name="method"
                 value={formValues.method}
                 onChange={handleInputChange}
-              />
-              <TextField
+              /></Tooltip>
+              <Tooltip title="How often will data be taken on this line item?"><TextField
                 size="small"
                 fullWidth
                 label="Sample & Freq"
                 name="sampleFreq"
                 value={formValues.sampleFreq}
                 onChange={handleInputChange}
-              />
-              <TextField
+              /></Tooltip>
+              <Tooltip title="How often will results be reported to Honda?"><TextField
                 size="small"
                 fullWidth
                 label="Report Freq"
                 name="reportingFreq"
                 value={formValues.reportingFreq}
                 onChange={handleInputChange}
-              />
+              /></Tooltip>
 
               {/* Add/Save button */}
               <Button size="small" variant="contained" onClick={handleAddOrUpdate}>
