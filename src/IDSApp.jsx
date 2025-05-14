@@ -23,7 +23,8 @@ import {
   FormControlLabel,
   Tooltip,
   Radio,
-  RadioGroup
+  RadioGroup,
+  ListSubheader
 } from '@mui/material';
 import { Edit, Delete } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
@@ -39,6 +40,46 @@ const toleranceTypes = [
   'Flatness','Straightness','Cylindricity','Circularity/Roundness','Perpendicularity',
   'Parallelism','Angularity','Total Runout','Circular Runout','Concentricity','Symmetry'
 ];
+
+const toleranceGroups = {
+  "Form Tolerances": [
+    'Flatness', 'Straightness', 'Cylindricity', 'Circularity/Roundness'
+  ],
+  "Orientation Tolerances": [
+    'Perpendicularity', 'Parallelism', 'Angularity'
+  ],
+  "Location Tolerances": [
+    'Position', 'Concentricity', 'Symmetry'
+  ],
+  "Profile Tolerances": [
+    'Profile of a Surface', 'Profile of a Line'
+  ],
+  "Runout Tolerances": [
+    'Total Runout', 'Circular Runout'
+  ],
+  "Other": [
+    'Direct Dimension', 'Radial'
+  ]
+};
+
+const toleranceIcons = {
+  'Angularity': '/icons/angularity.svg',
+  'Circularity/Roundness': '/icons/circularity.svg',
+  'Concentricity': '/icons/concentricity.svg',
+  'Cylindricity': '/icons/cylindricity.svg',
+  'Flatness': '/icons/flatness.svg',
+  'Profile of a Line': '/icons/line-profile.svg',
+  'Profile of a Surface': '/icons/surface-profile.svg',
+  'Parallelism': '/icons/parallelism.svg',
+  'Perpendicularity': '/icons/perpendicularity.svg',
+  'Position': '/icons/position.svg',
+  'Circular Runout': '/icons/runout.svg',
+  'Total Runout': '/icons/total-runout.svg',
+  'Symmetry': '/icons/symmetry.svg',
+  'Straightness': '/icons/straightness.svg',
+  'Direct Dimension': '/icons/plus-minus.svg',
+  'Radial': '/icons/radial.svg',
+};
 
 // Options for the Control Plan dropdown
 const controlPlans = ['CCP','KQP','CMP','N/A'];
@@ -520,7 +561,7 @@ export default function IDSApp() {
               {editGroupId ? 'Edit' : 'Add'} Inspection Item
             </Typography>
             <Stack spacing={1}>
-              {/* Tolerance Type dropdown */}
+              {/* Tolerance Type dropdown
               <FormControl fullWidth size="small">
                 <InputLabel id="tol-type-label">Tolerance</InputLabel>
                 <Select
@@ -537,7 +578,44 @@ export default function IDSApp() {
                     </MenuItem>
                   ))}
                 </Select>
+              </FormControl> */}
+
+              <FormControl fullWidth size="small">
+                <InputLabel id="tol-type-label">Tolerance</InputLabel>
+                <Select
+                  labelId="tol-type-label"
+                  id="tol-type"
+                  name="toleranceType"
+                  value={formValues.toleranceType}
+                  label="Tolerance"
+                  onChange={handleInputChange}
+                >
+                  {Object.entries(toleranceGroups).map(([group, types]) => [
+                    <ListSubheader 
+                    key={group}
+                    sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper' }}
+                    >{group}
+                    </ListSubheader>,
+                    ...types.map(type => (
+                      <MenuItem
+                      key={type}
+                      value={type}
+                      sx={{ pl: 3, fontSize: '0.8rem' }}
+                      >
+                    <Box
+                    component="img"
+                    src={toleranceIcons[type]}
+                    alt={`${type} icon`}
+                    sx={{ width: 20, height: 20, mr: 1 }}
+                  />
+                  <Box component="span">{type}</Box>
+                      </MenuItem>
+                    ))
+                  ])}
+                </Select>
               </FormControl>
+
+
 
               {/* Item name and spec inputs */}
               <TextField
