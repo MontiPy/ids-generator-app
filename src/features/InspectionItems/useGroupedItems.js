@@ -1,0 +1,90 @@
+// src/features/InspectionItems/useGroupedItems.js
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+export default function useGroupedItems() {
+  const [items, setItems] = useState([]);
+  const [editGroupId, setEditGroupId] = useState(null);
+
+  const generateItems = (formValues, groupId, tolWithXY, tolWithMinMax) => {
+    const {
+      name,
+      toleranceType,
+      nominal,
+      usl,
+      lsl,
+      controlPlan,
+      method,
+      sampleFreq,
+      reportingFreq
+    } = formValues;
+
+    if (tolWithXY.includes(toleranceType)) {
+      return ['', 'X', 'Y'].map(sub => ({
+        id: uuidv4(), groupId, name, toleranceType, subitem: sub,
+        nominal, usl, lsl, controlPlan, method, sampleFreq, reportingFreq
+      }));
+    }
+    if (tolWithMinMax.includes(toleranceType)) {
+      return ['', 'Min', 'Max'].map(sub => ({
+        id: uuidv4(), groupId, name, toleranceType, subitem: sub,
+        nominal, usl, lsl, controlPlan, method, sampleFreq, reportingFreq
+      }));
+    }
+    return [{
+      id: uuidv4(), groupId, name, toleranceType, subitem: '',
+      nominal, usl, lsl, controlPlan, method, sampleFreq, reportingFreq
+    }];
+  };
+
+  const handleAddOrUpdate = (formValues, tolWithXY, tolWithMinMax, resetFormValues) => {
+    if (!formValues.name) return;
+    if (editGroupId) {
+      setItems(prev => {
+        const others = prev.filter(i => i.groupId !== editGroupId);
+        return [...others, ...generateItems(formValues, editGroupId, tolWithXY, tolWithMinMax)];
+      });
+      setEditGroupId(null);
+    } else {
+      const newGroupId = uuidv4();
+      setItems(prev => [...prev, ...generateItems(formValues, newGroupId, tolWithXY, tolWithMinMax)]);
+    }
+    resetFormValues();
+  };
+
+  const handleEdit = (groupId, setFormValues) => {
+    const groupItems = items.filter(i => i.groupId === groupId);
+    const first = groupItems[0];
+    setFormValues({
+      name: first.name,
+      toleranceType: first.toleranceType,
+      nominal: first.nominal,
+      usl: first.usl,
+      lsl: first.lsl,
+      controlPlan: first.controlPlan,
+      method: first.method,
+      sampleFreq: first.sampleFreq,
+      reportingFreq: first.reportingFreq,
+      itemType: first.itemType || 'Variable'
+    });
+    setEditGroupId(groupId);
+  };
+
+  const handleDelete = (groupId, resetFormValues) => {
+    setItems(prev => prev.filter(i => i.groupId !== groupId));
+    if (editGroupId === groupId) {
+      setEditGroupId(null);
+      resetFormValues();
+    }
+  };
+
+  return {
+    items,
+    setItems,
+    editGroupId,
+    setEditGroupId,
+    handleAddOrUpdate,
+    handleEdit,
+    handleDelete
+  };
+}
