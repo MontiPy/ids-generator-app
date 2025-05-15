@@ -46,7 +46,7 @@ export default function ItemForm({
             {Object.entries(toleranceGroups).map(([group, types]) => [
               <ListSubheader 
                 key={group}
-                sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper' }}
+                sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }}
               >
                 {group}
               </ListSubheader>,
