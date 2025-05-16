@@ -129,7 +129,7 @@ export default function PartDetailsForm({ partInfo, onChange }) {
               />
               <FormControlLabel
                 control={<Checkbox size="small" name="dpProblem" checked={partInfo.dpProblem} onChange={onChange} />}
-                label="Problem"
+                label="Problem Investigation"
               />
               <FormControlLabel
                 control={<Checkbox size="small" name="dpOther" checked={partInfo.dpOther} onChange={onChange} />}
