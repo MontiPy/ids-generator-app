@@ -40,13 +40,13 @@ export default function ItemForm({
             id="tol-type"
             name="toleranceType"
             value={formValues.toleranceType}
-            label="Tolerance"
+            label="Tolerance Type"
             onChange={onChange}
           >
             {Object.entries(toleranceGroups).map(([group, types]) => [
               <ListSubheader 
                 key={group}
-                sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }}
+                sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper', height:35 }}
               >
                 {group}
               </ListSubheader>,
@@ -66,6 +66,7 @@ export default function ItemForm({
                 </MenuItem>
               ))
             ])}
+            <MenuItem value="N/A" sx={{ pl: 3, fontSize: '0.8rem' }}>Not Listed</MenuItem>
           </Select>
         </FormControl>
 
