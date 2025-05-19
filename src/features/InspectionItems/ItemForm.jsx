@@ -33,54 +33,64 @@ export default function ItemForm({
         {isEdit ? 'Edit' : 'Add'} Inspection Item
       </Typography>
       <Stack spacing={1}>
-        <FormControl fullWidth size="small">
-          <InputLabel id="tol-type-label">Tolerance</InputLabel>
-          <Select
-            labelId="tol-type-label"
-            id="tol-type"
-            name="toleranceType"
-            value={formValues.toleranceType}
-            label="Tolerance Type"
-            onChange={onChange}
-          >
-            {Object.entries(toleranceGroups).map(([group, types]) => [
-              <ListSubheader 
-                key={group}
-                sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper', height:35 }}
-              >
-                {group}
-              </ListSubheader>,
-              ...types.map(type => (
-                <MenuItem
-                  key={type}
-                  value={type}
-                  sx={{ pl: 3, fontSize: '0.8rem' }}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
+          <FormControl sx={{ flex: 1}} size="small">
+            <InputLabel id="tol-type-label">Tolerance</InputLabel>
+            <Select
+              labelId="tol-type-label"
+              id="tol-type"
+              name="toleranceType"
+              value={formValues.toleranceType}
+              label="Tolerance Type"
+              onChange={onChange}
+            >
+              {Object.entries(toleranceGroups).map(([group, types]) => [
+                <ListSubheader 
+                  key={group}
+                  sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper', height:35 }}
                 >
-                  <Box
-                    component="img"
-                    src={toleranceIcons[type]}
-                    alt={`${type} icon`}
-                    sx={{ width: 20, height: 20, mr: 1 }}
-                  />
-                  <Box component="span">{type}</Box>
-                </MenuItem>
-              ))
-            ])}
-            <MenuItem value="Other" sx={{ pl: 3, fontSize: '0.8rem' }}>Not Listed</MenuItem>
-          </Select>
-        </FormControl>
+                  {group}
+                </ListSubheader>,
+                ...types.map(type => (
+                  <MenuItem
+                    key={type}
+                    value={type}
+                    sx={{ pl: 3, fontSize: '0.8rem' }}
+                  >
+                    <Box
+                      component="img"
+                      src={toleranceIcons[type]}
+                      alt={`${type} icon`}
+                      sx={{ width: 20, height: 20, mr: 1 }}
+                    />
+                    <Box component="span">{type}</Box>
+                  </MenuItem>
+                ))
+              ])}
+              <MenuItem value="Other" sx={{ pl: 3, fontSize: '0.8rem' }}>
+              <Box
+                component="img"
+                src={toleranceIcons["Other"]} // Replace with the appropriate icon source
+                alt="Not Listed icon"
+                sx={{ width: 20, height: 20, mr: 1 }}
+              />
+              <Box component="span">Not Listed</Box>
+              </MenuItem>
+            </Select>
+          </FormControl>
 
-        {/* Conditionally render the input box for "Not Listed" */}
-        {formValues.toleranceType === "Other" && (
-          <TextField
-            size="small"
-            fullWidth
-            label="Specify Tolerance Type"
-            name="customToleranceType" // Use a separate field for the custom input
-            value={formValues.customToleranceType || ""} // Default to an empty string if undefined
-            onChange={(e) => onChange({ target: { name: "customToleranceType", value: e.target.value } })}
-          />
-        )}
+          {/* Conditionally render the input box for "Not Listed" */}
+          {formValues.toleranceType === "Other" && (
+            <TextField
+              size="small"
+              sx ={{ flex: 1 }}
+              label="Specify Tolerance Type"
+              name="customToleranceType" // Use a separate field for the custom input
+              value={formValues.customToleranceType || ""} // Default to an empty string if undefined
+              onChange={(e) => onChange({ target: { name: "customToleranceType", value: e.target.value } })}
+            />
+          )}
+        </Box> 
 
         <TextField
           size="small"
