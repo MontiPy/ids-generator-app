@@ -37,7 +37,8 @@ export const toleranceGroups = {
     'Symmetry': '/icons/symmetry.svg',
     'Straightness': '/icons/straightness.svg',
     'Direct Dimension': '/icons/plus-minus.svg',
-    'Radial': '/icons/radial.svg'
+    'Radial': '/icons/radial.svg',
+    'Other': '/icons/question-mark-circle.svg',
   };
   
   export const controlPlans = ['CCP','KQP','CMP','N/A'];
