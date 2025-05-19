@@ -1,5 +1,5 @@
 // src/features/InspectionItems/ItemForm.jsx
-import React from 'react';
+import React from "react";
 import {
   Box,
   Button,
@@ -14,8 +14,8 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography
-} from '@mui/material';
+  Typography,
+} from "@mui/material";
 
 export default function ItemForm({
   formValues,
@@ -25,16 +25,16 @@ export default function ItemForm({
   isLSLDisabled,
   toleranceGroups,
   toleranceIcons,
-  controlPlans
+  controlPlans,
 }) {
   return (
     <Box component="form" noValidate autoComplete="off">
       <Typography variant="subtitle1" gutterBottom>
-        {isEdit ? 'Edit' : 'Add'} Inspection Item
+        {isEdit ? "Edit" : "Add"} Inspection Item
       </Typography>
       <Stack spacing={1}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
-          <FormControl sx={{ flex: 1}} size="small">
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <FormControl sx={{ flex: 1 }} size="small">
             <InputLabel id="tol-type-label">Tolerance</InputLabel>
             <Select
               labelId="tol-type-label"
@@ -45,17 +45,22 @@ export default function ItemForm({
               onChange={onChange}
             >
               {Object.entries(toleranceGroups).map(([group, types]) => [
-                <ListSubheader 
+                <ListSubheader
                   key={group}
-                  sx={{ fontWeight: 'bold', fontSize: '0.9rem', bgcolor: 'background.paper', height:35 }}
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "0.9rem",
+                    bgcolor: "background.paper",
+                    height: 35,
+                  }}
                 >
                   {group}
                 </ListSubheader>,
-                ...types.map(type => (
+                ...types.map((type) => (
                   <MenuItem
                     key={type}
                     value={type}
-                    sx={{ pl: 3, fontSize: '0.8rem' }}
+                    sx={{ pl: 3, fontSize: "0.8rem" }}
                   >
                     <Box
                       component="img"
@@ -65,16 +70,16 @@ export default function ItemForm({
                     />
                     <Box component="span">{type}</Box>
                   </MenuItem>
-                ))
+                )),
               ])}
-              <MenuItem value="Other" sx={{ pl: 3, fontSize: '0.8rem' }}>
-              <Box
-                component="img"
-                src={toleranceIcons["Other"]} // Replace with the appropriate icon source
-                alt="Not Listed icon"
-                sx={{ width: 20, height: 20, mr: 1 }}
-              />
-              <Box component="span">Not Listed</Box>
+              <MenuItem value="Other" sx={{ pl: 3, fontSize: "0.8rem" }}>
+                <Box
+                  component="img"
+                  src={toleranceIcons["Other"]} // Replace with the appropriate icon source
+                  alt="Not Listed icon"
+                  sx={{ width: 20, height: 20, mr: 1 }}
+                />
+                <Box component="span">Not Listed</Box>
               </MenuItem>
             </Select>
           </FormControl>
@@ -83,14 +88,21 @@ export default function ItemForm({
           {formValues.toleranceType === "Other" && (
             <TextField
               size="small"
-              sx ={{ flex: 1 }}
+              sx={{ flex: 1 }}
               label="Specify Tolerance Type"
               name="customToleranceType" // Use a separate field for the custom input
               value={formValues.customToleranceType || ""} // Default to an empty string if undefined
-              onChange={(e) => onChange({ target: { name: "customToleranceType", value: e.target.value } })}
+              onChange={(e) =>
+                onChange({
+                  target: {
+                    name: "customToleranceType",
+                    value: e.target.value,
+                  },
+                })
+              }
             />
           )}
-        </Box> 
+        </Box>
 
         <TextField
           size="small"
@@ -133,27 +145,34 @@ export default function ItemForm({
             size="small"
             label="USL"
             name="usl"
-            value={formValues.itemType === 'Attribute' ? 'NG' : formValues.usl}
+            value={formValues.itemType === "Attribute" ? "NG" : formValues.usl}
             onChange={onChange}
-            disabled={formValues.itemType === 'Attribute'}
+            disabled={formValues.itemType === "Attribute"}
           />
           <TextField
             size="small"
             label="LSL"
             name="lsl"
-            value={formValues.itemType === 'Attribute' ? 'OK' : formValues.lsl}
+            value={formValues.itemType === "Attribute" ? "OK" : formValues.lsl}
             onChange={onChange}
-            disabled={formValues.itemType === 'Attribute' || isLSLDisabled}
+            disabled={formValues.itemType === "Attribute" || isLSLDisabled}
           />
         </Stack>
 
         <Tooltip
           title={
             <>
-              Mark N/A if the point is not a CCP or KQP <br /><br />
-              CCP and KQP points are identified to ensure visibility of these items is maintained. <br /><br />
-              CCP (Critical Control Point)- These line items are critical points that require variable data and statistical analysis to ensure part performance. <br /><br />
-              KQP (Key Quality Point)- These line items are key points that ensure part performance, but do not require statistical analysis.
+              Mark N/A if the point is not a CCP or KQP <br />
+              <br />
+              CCP and KQP points are identified to ensure visibility of these
+              items is maintained. <br />
+              <br />
+              CCP (Critical Control Point)- These line items are critical points
+              that require variable data and statistical analysis to ensure part
+              performance. <br />
+              <br />
+              KQP (Key Quality Point)- These line items are key points that
+              ensure part performance, but do not require statistical analysis.
             </>
           }
         >
@@ -167,7 +186,7 @@ export default function ItemForm({
               onChange={onChange}
               size="small"
             >
-              {controlPlans.map(cp => (
+              {controlPlans.map((cp) => (
                 <MenuItem key={cp} value={cp}>
                   <Typography variant="caption">{cp}</Typography>
                 </MenuItem>
@@ -210,7 +229,7 @@ export default function ItemForm({
         </Tooltip>
 
         <Button size="small" variant="contained" onClick={onSubmit}>
-          {isEdit ? 'Save' : 'Add'}
+          {isEdit ? "Save" : "Add"}
         </Button>
       </Stack>
     </Box>

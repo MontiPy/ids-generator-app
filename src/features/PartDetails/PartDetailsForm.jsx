@@ -1,5 +1,5 @@
 // src/features/PartDetails/PartDetailsForm.jsx
-import React from 'react';
+import React from "react";
 import {
   Box,
   Card,
@@ -12,8 +12,8 @@ import {
   MenuItem,
   FormControlLabel,
   Checkbox,
-  Stack
-} from '@mui/material';
+  Stack,
+} from "@mui/material";
 
 export default function PartDetailsForm({ partInfo, onChange }) {
   return (
@@ -22,8 +22,17 @@ export default function PartDetailsForm({ partInfo, onChange }) {
         <Typography variant="subtitle1" gutterBottom>
           Part Details
         </Typography>
-        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={1}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ gridColumn: 1, gridRow: 1 }}>
+        <Box
+          display="grid"
+          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+          gap={1}
+        >
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{ gridColumn: 1, gridRow: 1 }}
+          >
             <TextField
               size="small"
               label="Part Number"
@@ -32,11 +41,25 @@ export default function PartDetailsForm({ partInfo, onChange }) {
               onChange={onChange}
             />
             <FormControlLabel
-              control={<Checkbox size="small" name="sideLeft" checked={partInfo.sideLeft} onChange={onChange} />}
+              control={
+                <Checkbox
+                  size="small"
+                  name="sideLeft"
+                  checked={partInfo.sideLeft}
+                  onChange={onChange}
+                />
+              }
               label="Left"
             />
             <FormControlLabel
-              control={<Checkbox size="small" name="sideRight" checked={partInfo.sideRight} onChange={onChange} />}
+              control={
+                <Checkbox
+                  size="small"
+                  name="sideRight"
+                  checked={partInfo.sideRight}
+                  onChange={onChange}
+                />
+              }
               label="Right"
             />
           </Stack>
@@ -86,7 +109,11 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             sx={{ gridColumn: 2, gridRow: 3 }}
           />
 
-          <FormControl fullWidth size="small" sx={{ gridColumn: 1, gridRow: 4 }}>
+          <FormControl
+            fullWidth
+            size="small"
+            sx={{ gridColumn: 1, gridRow: 4 }}
+          >
             <InputLabel id="drawing-rank-label">Drawing Rank</InputLabel>
             <Select
               labelId="drawing-rank-label"
@@ -102,7 +129,11 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             </Select>
           </FormControl>
 
-          <FormControl fullWidth size="small" sx={{ gridColumn: 2, gridRow: 4 }}>
+          <FormControl
+            fullWidth
+            size="small"
+            sx={{ gridColumn: 2, gridRow: 4 }}
+          >
             <InputLabel id="reg-part-label">Regulation Part</InputLabel>
             <Select
               labelId="reg-part-label"
@@ -116,23 +147,51 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             </Select>
           </FormControl>
 
-          <Box sx={{ gridColumn: '1 / 3', gridRow: 5 }}>
+          <Box sx={{ gridColumn: "1 / 3", gridRow: 5 }}>
             <Typography variant="caption">Data Purpose</Typography>
             <Box display="flex" alignItems="center" gap={1}>
               <FormControlLabel
-                control={<Checkbox size="small" name="dpRegular" checked={partInfo.dpRegular} onChange={onChange} />}
+                control={
+                  <Checkbox
+                    size="small"
+                    name="dpRegular"
+                    checked={partInfo.dpRegular}
+                    onChange={onChange}
+                  />
+                }
                 label="Regular"
               />
               <FormControlLabel
-                control={<Checkbox size="small" name="dpNewModel" checked={partInfo.dpNewModel} onChange={onChange} />}
+                control={
+                  <Checkbox
+                    size="small"
+                    name="dpNewModel"
+                    checked={partInfo.dpNewModel}
+                    onChange={onChange}
+                  />
+                }
                 label="New Model"
               />
               <FormControlLabel
-                control={<Checkbox size="small" name="dpProblem" checked={partInfo.dpProblem} onChange={onChange} />}
+                control={
+                  <Checkbox
+                    size="small"
+                    name="dpProblem"
+                    checked={partInfo.dpProblem}
+                    onChange={onChange}
+                  />
+                }
                 label="Problem Investigation"
               />
               <FormControlLabel
-                control={<Checkbox size="small" name="dpOther" checked={partInfo.dpOther} onChange={onChange} />}
+                control={
+                  <Checkbox
+                    size="small"
+                    name="dpOther"
+                    checked={partInfo.dpOther}
+                    onChange={onChange}
+                  />
+                }
                 label="Other"
               />
               {partInfo.dpOther && (

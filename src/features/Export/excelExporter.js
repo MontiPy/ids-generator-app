@@ -28,9 +28,9 @@ export async function exportToExcel(partInfo, items) {
   // Data from Tolerance Table
   // Read table header and rows from the DOM
   const table = document.getElementById('items-table');
-  const headers = Array.from(table.tHead.rows[0].cells)
-    .slice(0, 11) // Skip 'No.' and 'Action' columns
-    .map(cell => cell.innerText);
+  // const headers = Array.from(table.tHead.rows[0].cells)
+  //   .slice(0, 11) // Skip 'No.' and 'Action' columns
+  //   .map(cell => cell.innerText);
 
   const domData = Array.from(table.tBodies[0].rows).map(row =>
     Array.from(row.cells)
@@ -38,7 +38,7 @@ export async function exportToExcel(partInfo, items) {
       .map(cell => cell.innerText)
   );
   
-  const headerNames = ['Header_No', 'Header_InspItem', 'Header_TolType', 'Header_CCP', 'Header_Method', 'Header_Sample', 'Header_Reporting', 'Header_LSL', 'Header_USL', 'Header_Nom'];
+  // const headerNames = ['Header_No', 'Header_InspItem', 'Header_TolType', 'Header_CCP', 'Header_Method', 'Header_Sample', 'Header_Reporting', 'Header_LSL', 'Header_USL', 'Header_Nom'];
   const colOrder = [0,1,2,null,null,6,7,8,null,9,null,5,4,null,3];
   const domRearranged = domData.map(row => colOrder.map(colIdx => row[colIdx]));
 

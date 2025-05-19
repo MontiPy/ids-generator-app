@@ -1,26 +1,27 @@
-import { createTheme } from '@mui/material/styles';
-
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
-    typography: {
-        allVariants: {
-            fontFamily: 'Yu Gothic',
-            fontSize: 14
-        },
+  typography: {
+    allVariants: {
+      fontFamily: "Yu Gothic",
+      fontSize: 14,
     },
-    components: {
-      MuiButton: {
-        defaultProps: {
-          size: "small",
-          variant: "outlined"
-        }
+  },
+  components: {
+    MuiButton: {
+      defaultProps: {
+        size: "small",
+        variant: "outlined",
       },
-      MuiListSubheader: {
-        styleOverrides: {
-            root: {
-                fontFamily: 'Yu Gothic'
-        }
-      }
-  }}});
+    },
+    MuiListSubheader: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Yu Gothic",
+        },
+      },
+    },
+  },
+});
 
 export default theme;

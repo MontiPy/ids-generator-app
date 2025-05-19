@@ -1,7 +1,6 @@
 // src/features/InspectionItems/ItemsTable.jsx
-import React from 'react';
+import React from "react";
 import {
-  Box,
   IconButton,
   Paper,
   Table,
@@ -9,12 +8,12 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
-} from '@mui/material';
-import { Edit, Delete } from 'lucide-react';
+  TableRow,
+} from "@mui/material";
+import { Edit, Delete } from "lucide-react";
 
 export default function ItemsTable({ items, onEdit, onDelete }) {
-  const grouped = Array.from(new Set(items.map(i => i.groupId)));
+  const grouped = Array.from(new Set(items.map((i) => i.groupId)));
 
   return (
     <TableContainer component={Paper} sx={{ maxHeight: 300 }}>
@@ -39,32 +38,32 @@ export default function ItemsTable({ items, onEdit, onDelete }) {
             <React.Fragment key={gid}>
               <TableRow hover>
                 <TableCell sx={{ py: 0.5 }}>{idx + 1}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).name}
+                <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
+                  {items.find((x) => x.groupId === gid).name}
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).toleranceType}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).nominal}
+                <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
+                  {items.find((x) => x.groupId === gid).toleranceType}
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).usl}
+                  {items.find((x) => x.groupId === gid).nominal}
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).lsl}
+                  {items.find((x) => x.groupId === gid).usl}
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).controlPlan}
+                  {items.find((x) => x.groupId === gid).lsl}
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).method}
+                  {items.find((x) => x.groupId === gid).controlPlan}
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).sampleFreq}
+                  {items.find((x) => x.groupId === gid).method}
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>
-                  {items.find(x => x.groupId === gid).reportingFreq}
+                  {items.find((x) => x.groupId === gid).sampleFreq}
+                </TableCell>
+                <TableCell sx={{ py: 0.5 }}>
+                  {items.find((x) => x.groupId === gid).reportingFreq}
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>
                   <IconButton size="small" onClick={() => onEdit(gid)}>
@@ -75,21 +74,27 @@ export default function ItemsTable({ items, onEdit, onDelete }) {
                   </IconButton>
                 </TableCell>
               </TableRow>
-              {items.filter(x => x.groupId === gid && x.subitem).map((item, j) => (
-                <TableRow hover key={item.id}>
-                  <TableCell sx={{ py: 0.5 }}>{`${idx + 1}${String.fromCharCode(97 + j)}`}</TableCell>
-                  <TableCell sx={{ py: 0.5 }}>{`${item.name} - ${item.subitem}`}</TableCell>
-                  <TableCell sx={{ py: 0.5 }}>{item.toleranceType}</TableCell>
-                  <TableCell sx={{ py: 0.5 }} />
-                  <TableCell sx={{ py: 0.5 }} />
-                  <TableCell sx={{ py: 0.5 }} />
-                  <TableCell sx={{ py: 0.5 }} />
-                  <TableCell sx={{ py: 0.5 }} />
-                  <TableCell sx={{ py: 0.5 }} />
-                  <TableCell sx={{ py: 0.5 }} />
-                  <TableCell sx={{ py: 0.5 }} />
-                </TableRow>
-              ))}
+              {items
+                .filter((x) => x.groupId === gid && x.subitem)
+                .map((item, j) => (
+                  <TableRow hover key={item.id}>
+                    <TableCell sx={{ py: 0.5 }}>{`${
+                      idx + 1
+                    }${String.fromCharCode(97 + j)}`}</TableCell>
+                    <TableCell
+                      sx={{ py: 0.5 }}
+                    >{`${item.name} - ${item.subitem}`}</TableCell>
+                    <TableCell sx={{ py: 0.5 }}>{item.toleranceType}</TableCell>
+                    <TableCell sx={{ py: 0.5 }} />
+                    <TableCell sx={{ py: 0.5 }} />
+                    <TableCell sx={{ py: 0.5 }} />
+                    <TableCell sx={{ py: 0.5 }} />
+                    <TableCell sx={{ py: 0.5 }} />
+                    <TableCell sx={{ py: 0.5 }} />
+                    <TableCell sx={{ py: 0.5 }} />
+                    <TableCell sx={{ py: 0.5 }} />
+                  </TableRow>
+                ))}
             </React.Fragment>
           ))}
         </TableBody>
