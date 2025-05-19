@@ -39,15 +39,26 @@ export default function useGroupedItems() {
 
   const handleAddOrUpdate = (formValues, tolWithXY, tolWithMinMax, resetFormValues) => {
     if (!formValues.name) return;
+
+      // Handle custom tolerance type if "N/A" is selected
+      const toleranceType = formValues.toleranceType === "Other" 
+      ? formValues.customToleranceType 
+      : formValues.toleranceType;
+
+      const updatedFormValues = {
+        ...formValues,
+        toleranceType, // Use the custom tolerance type if applicable
+      };
+
     if (editGroupId) {
       setItems(prev => {
         const others = prev.filter(i => i.groupId !== editGroupId);
-        return [...others, ...generateItems(formValues, editGroupId, tolWithXY, tolWithMinMax)];
+        return [...others, ...generateItems(updatedFormValues, editGroupId, tolWithXY, tolWithMinMax)];
       });
       setEditGroupId(null);
     } else {
       const newGroupId = uuidv4();
-      setItems(prev => [...prev, ...generateItems(formValues, newGroupId, tolWithXY, tolWithMinMax)]);
+      setItems(prev => [...prev, ...generateItems(updatedFormValues, newGroupId, tolWithXY, tolWithMinMax)]);
     }
     resetFormValues();
   };

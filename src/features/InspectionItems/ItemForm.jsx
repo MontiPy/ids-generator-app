@@ -66,9 +66,21 @@ export default function ItemForm({
                 </MenuItem>
               ))
             ])}
-            <MenuItem value="N/A" sx={{ pl: 3, fontSize: '0.8rem' }}>Not Listed</MenuItem>
+            <MenuItem value="Other" sx={{ pl: 3, fontSize: '0.8rem' }}>Not Listed</MenuItem>
           </Select>
         </FormControl>
+
+        {/* Conditionally render the input box for "Not Listed" */}
+        {formValues.toleranceType === "Other" && (
+          <TextField
+            size="small"
+            fullWidth
+            label="Specify Tolerance Type"
+            name="customToleranceType" // Use a separate field for the custom input
+            value={formValues.customToleranceType || ""} // Default to an empty string if undefined
+            onChange={(e) => onChange({ target: { name: "customToleranceType", value: e.target.value } })}
+          />
+        )}
 
         <TextField
           size="small"
