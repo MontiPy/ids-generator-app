@@ -108,7 +108,6 @@ export default function useGroupedItems() {
     };
 
     if (!areItemFieldsComplete(formValues)) {
-      alert("Please complete all Inspection Item fields.");
       return;
     }
 

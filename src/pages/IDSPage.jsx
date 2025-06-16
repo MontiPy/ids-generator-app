@@ -38,6 +38,8 @@ export default function IDSPage() {
     dpOtherText: "",
   });
 
+  const [partErrors, setPartErrors] = useState({});
+
   const [formValues, setFormValues] = useState({
     name: "",
     toleranceType: "",
@@ -50,6 +52,8 @@ export default function IDSPage() {
     sampleFreq: "",
     reportingFreq: "",
   });
+
+  const [itemErrors, setItemErrors] = useState({});
 
   const isLSLDisabled = nonLSLTolerances.includes(formValues.toleranceType);
 
@@ -80,12 +84,27 @@ export default function IDSPage() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    setPartErrors((prev) => {
+      const newErr = { ...prev };
+      if (name === "sideLeft" || name === "sideRight") {
+        newErr.side = false;
+      } else if (name.startsWith("dp")) {
+        newErr.dp = false;
+        if (name === "dpOtherText") {
+          newErr.dpOtherText = false;
+        }
+      } else {
+        newErr[name] = false;
+      }
+      return newErr;
+    });
   };
 
   const { items, editGroupId, handleAddOrUpdate, handleEdit, handleDelete } =
     useGroupedItems();
 
-  const arePartDetailsComplete = (info) => {
+  const validatePartDetails = (info) => {
+    const errors = {};
     const required = [
       "partNumber",
       "model",
@@ -96,27 +115,67 @@ export default function IDSPage() {
       "drawingRank",
       "regulationPart",
     ];
-    const textComplete = required.every(
-      (field) => info[field] && info[field].toString().trim() !== ""
-    );
-    const sideComplete = info.sideLeft || info.sideRight;
-    const dpComplete =
-      info.dpRegular || info.dpNewModel || info.dpProblem || info.dpOther;
-    const otherComplete = !info.dpOther || info.dpOtherText.trim() !== "";
-    return textComplete && sideComplete && dpComplete && otherComplete;
+    required.forEach((f) => {
+      if (!info[f] || info[f].toString().trim() === "") {
+        errors[f] = true;
+      }
+    });
+    if (!info.sideLeft && !info.sideRight) errors.side = true;
+    if (!info.dpRegular && !info.dpNewModel && !info.dpProblem && !info.dpOther)
+      errors.dp = true;
+    if (info.dpOther && info.dpOtherText.trim() === "") errors.dpOtherText = true;
+    return errors;
+  };
+
+  const validateItemFields = (values) => {
+    const errors = {};
+    const required = [
+      "toleranceType",
+      "name",
+      "nominal",
+      "usl",
+      "controlPlan",
+      "method",
+      "sampleFreq",
+      "reportingFreq",
+    ];
+    required.forEach((f) => {
+      if (!values[f] || values[f].toString().trim() === "") {
+        errors[f] = true;
+      }
+    });
+    const lslNeeded =
+      values.itemType !== "Attribute" &&
+      !nonLSLTolerances.includes(values.toleranceType);
+    if (lslNeeded && (!values.lsl || values.lsl.toString().trim() === "")) {
+      errors.lsl = true;
+    }
+    if (
+      values.toleranceType === "Other" &&
+      (!values.customToleranceType || values.customToleranceType.trim() === "")
+    ) {
+      errors.customToleranceType = true;
+    }
+    return errors;
   };
 
   const handleExport = () => {
-    if (!arePartDetailsComplete(partInfo)) {
-      alert("Please complete all Part Details before exporting.");
+    const errs = validatePartDetails(partInfo);
+    if (Object.keys(errs).length) {
+      setPartErrors(errs);
       return;
     }
+    setPartErrors({});
     exportToExcel(partInfo, items);
   };
 
   return (
     <Box p={1}>
-      <PartDetailsForm partInfo={partInfo} onChange={handlePartChange} />
+      <PartDetailsForm
+        partInfo={partInfo}
+        onChange={handlePartChange}
+        errors={partErrors}
+      />
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1}>
         <Box minWidth={250}>
@@ -125,20 +184,28 @@ export default function IDSPage() {
             onChange={(e) => {
               const { name, value } = e.target;
               setFormValues((prev) => ({ ...prev, [name]: value }));
+              setItemErrors((prev) => ({ ...prev, [name]: false }));
             }}
-            onSubmit={() =>
+            onSubmit={() => {
+              const errs = validateItemFields(formValues);
+              if (Object.keys(errs).length) {
+                setItemErrors(errs);
+                return;
+              }
+              setItemErrors({});
               handleAddOrUpdate(
                 formValues,
                 tolWithXY,
                 tolWithMinMax,
                 resetFormValues
-              )
-            }
+              );
+            }}
             isEdit={Boolean(editGroupId)}
             isLSLDisabled={isLSLDisabled}
             toleranceGroups={toleranceGroups}
             toleranceIcons={toleranceIcons}
             controlPlans={controlPlans}
+            errors={itemErrors}
           />
         </Box>
 
