@@ -34,69 +34,56 @@ export default function ItemsTable({ items, onEdit, onDelete }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {grouped.map((gid, idx) => (
-            <React.Fragment key={gid}>
-              <TableRow hover>
-                <TableCell sx={{ py: 0.5 }}>{idx + 1}</TableCell>
-                <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).name}
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).toleranceType}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).nominal}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).usl}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).lsl}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).controlPlan}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).method}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).sampleFreq}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  {items.find((x) => x.groupId === gid).reportingFreq}
-                </TableCell>
-                <TableCell sx={{ py: 0.5 }}>
-                  <IconButton size="small" onClick={() => onEdit(gid)}>
-                    <Edit size={14} />
-                  </IconButton>
-                  <IconButton size="small" onClick={() => onDelete(gid)}>
-                    <Delete size={14} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-              {items
-                .filter((x) => x.groupId === gid && x.subitem)
-                .map((item, j) => (
-                  <TableRow hover key={item.id}>
-                    <TableCell sx={{ py: 0.5 }}>{`${
-                      idx + 1
-                    }${String.fromCharCode(97 + j)}`}</TableCell>
-                    <TableCell
-                      sx={{ py: 0.5 }}
-                    >{`${item.name} - ${item.subitem}`}</TableCell>
-                    <TableCell sx={{ py: 0.5 }}>{item.toleranceType}</TableCell>
-                    <TableCell sx={{ py: 0.5 }} />
-                    <TableCell sx={{ py: 0.5 }} />
-                    <TableCell sx={{ py: 0.5 }} />
-                    <TableCell sx={{ py: 0.5 }} />
-                    <TableCell sx={{ py: 0.5 }} />
-                    <TableCell sx={{ py: 0.5 }} />
-                    <TableCell sx={{ py: 0.5 }} />
-                    <TableCell sx={{ py: 0.5 }} />
-                  </TableRow>
-                ))}
-            </React.Fragment>
-          ))}
+          {grouped.map((gid, idx) => {
+            const groupItem = items.find((x) => x.groupId === gid);
+            return (
+              <React.Fragment key={gid}>
+                <TableRow hover>
+                  <TableCell sx={{ py: 0.5 }}>{idx + 1}</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
+                    {groupItem.name}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
+                    {groupItem.toleranceType}
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.nominal}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.usl}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.lsl}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.controlPlan}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.method}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.sampleFreq}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.reportingFreq}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>
+                    <IconButton size="small" onClick={() => onEdit(gid)}>
+                      <Edit size={14} />
+                    </IconButton>
+                    <IconButton size="small" onClick={() => onDelete(gid)}>
+                      <Delete size={14} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+                {items
+                  .filter((x) => x.groupId === gid && x.subitem)
+                  .map((item, j) => (
+                    <TableRow hover key={item.id}>
+                      <TableCell sx={{ py: 0.5 }}>{`${
+                        idx + 1
+                      }${String.fromCharCode(97 + j)}`}</TableCell>
+                      <TableCell sx={{ py: 0.5 }}>{`${item.name} - ${item.subitem}`}</TableCell>
+                      <TableCell sx={{ py: 0.5 }}>{item.toleranceType}</TableCell>
+                      <TableCell sx={{ py: 0.5 }} />
+                      <TableCell sx={{ py: 0.5 }} />
+                      <TableCell sx={{ py: 0.5 }} />
+                      <TableCell sx={{ py: 0.5 }} />
+                      <TableCell sx={{ py: 0.5 }} />
+                      <TableCell sx={{ py: 0.5 }} />
+                      <TableCell sx={{ py: 0.5 }} />
+                      <TableCell sx={{ py: 0.5 }} />
+                    </TableRow>
+                  ))}
+              </React.Fragment>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
