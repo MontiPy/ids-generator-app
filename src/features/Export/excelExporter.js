@@ -1,6 +1,11 @@
 // src/features/Export/excelExporter.js
 import XlsxPopulate from 'xlsx-populate/browser/xlsx-populate';
 
+async function fetchTemplate() {
+  const response = await fetch('/template.xlsx');
+  return response.arrayBuffer();
+}
+
 export function prepareExportRows(items) {
   const grouped = Array.from(new Set(items.map((i) => i.groupId)));
   const rows = [];
@@ -47,8 +52,7 @@ export function prepareExportRows(items) {
 }
 
 export async function exportToExcel(partInfo, items) {
-  const response = await fetch('/template.xlsx');
-  const arrayBuffer = await response.arrayBuffer();
+  const arrayBuffer = await fetchTemplate();
   const workbook = await XlsxPopulate.fromDataAsync(arrayBuffer);
 
   // Named Range Population
@@ -83,8 +87,7 @@ URL.revokeObjectURL(url);
 }
 
 export async function downloadTemplate() {
-  const response = await fetch('/template.xlsx');
-  const arrayBuffer = await response.arrayBuffer();
+  const arrayBuffer = await fetchTemplate();
   const blob = new Blob([arrayBuffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   });
