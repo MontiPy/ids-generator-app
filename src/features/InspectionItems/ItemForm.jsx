@@ -15,6 +15,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  FormHelperText,
 } from "@mui/material";
 
 export default function ItemForm({
@@ -26,6 +27,7 @@ export default function ItemForm({
   toleranceGroups,
   toleranceIcons,
   controlPlans,
+  errors = {},
 }) {
   return (
     <Box component="form" noValidate autoComplete="off">
@@ -34,7 +36,7 @@ export default function ItemForm({
       </Typography>
       <Stack spacing={1}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <FormControl sx={{ flex: 1 }} size="small">
+          <FormControl sx={{ flex: 1 }} size="small" error={Boolean(errors.toleranceType)}>
             <InputLabel id="tol-type-label">Tolerance</InputLabel>
             <Select
               labelId="tol-type-label"
@@ -82,6 +84,7 @@ export default function ItemForm({
                 <Box component="span">Not Listed</Box>
               </MenuItem>
             </Select>
+            {errors.toleranceType && <FormHelperText>Required</FormHelperText>}
           </FormControl>
 
           {/* Conditionally render the input box for "Not Listed" */}
@@ -100,6 +103,8 @@ export default function ItemForm({
                   },
                 })
               }
+              error={Boolean(errors.customToleranceType)}
+              helperText={errors.customToleranceType && "Required"}
             />
           )}
         </Box>
@@ -111,6 +116,8 @@ export default function ItemForm({
           name="name"
           value={formValues.name}
           onChange={onChange}
+          error={Boolean(errors.name)}
+          helperText={errors.name && "Required"}
         />
 
         <FormControl component="fieldset" size="small">
@@ -140,6 +147,8 @@ export default function ItemForm({
             name="nominal"
             value={formValues.nominal}
             onChange={onChange}
+            error={Boolean(errors.nominal)}
+            helperText={errors.nominal && "Required"}
           />
           <TextField
             size="small"
@@ -148,6 +157,8 @@ export default function ItemForm({
             value={formValues.itemType === "Attribute" ? "NG" : formValues.usl}
             onChange={onChange}
             disabled={formValues.itemType === "Attribute"}
+            error={Boolean(errors.usl)}
+            helperText={errors.usl && "Required"}
           />
           <TextField
             size="small"
@@ -156,6 +167,8 @@ export default function ItemForm({
             value={formValues.itemType === "Attribute" ? "OK" : formValues.lsl}
             onChange={onChange}
             disabled={formValues.itemType === "Attribute" || isLSLDisabled}
+            error={Boolean(errors.lsl)}
+            helperText={errors.lsl && "Required"}
           />
         </Stack>
 
@@ -176,7 +189,7 @@ export default function ItemForm({
             </>
           }
         >
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size="small" error={Boolean(errors.controlPlan)}>
             <InputLabel id="cp-label">CCP/KQP/GMP</InputLabel>
             <Select
               labelId="cp-label"
@@ -192,6 +205,7 @@ export default function ItemForm({
                 </MenuItem>
               ))}
             </Select>
+            {errors.controlPlan && <FormHelperText>Required</FormHelperText>}
           </FormControl>
         </Tooltip>
 
@@ -203,6 +217,8 @@ export default function ItemForm({
             name="method"
             value={formValues.method}
             onChange={onChange}
+            error={Boolean(errors.method)}
+            helperText={errors.method && "Required"}
           />
         </Tooltip>
 
@@ -214,6 +230,8 @@ export default function ItemForm({
             name="sampleFreq"
             value={formValues.sampleFreq}
             onChange={onChange}
+            error={Boolean(errors.sampleFreq)}
+            helperText={errors.sampleFreq && "Required"}
           />
         </Tooltip>
 
@@ -225,6 +243,8 @@ export default function ItemForm({
             name="reportingFreq"
             value={formValues.reportingFreq}
             onChange={onChange}
+            error={Boolean(errors.reportingFreq)}
+            helperText={errors.reportingFreq && "Required"}
           />
         </Tooltip>
 

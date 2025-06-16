@@ -46,3 +46,26 @@ test('adds subitems when tolerance type requires XY', () => {
   });
   expect(result.current.items).toHaveLength(3);
 });
+
+test('does not add item when required fields are missing', () => {
+  const { result } = renderHook(() => useGroupedItems());
+  act(() => {
+    result.current.handleAddOrUpdate(
+      {
+        name: '',
+        toleranceType: '',
+        nominal: '',
+        usl: '',
+        lsl: '',
+        controlPlan: 'N/A',
+        method: '',
+        sampleFreq: '',
+        reportingFreq: ''
+      },
+      [],
+      [],
+      () => {}
+    );
+  });
+  expect(result.current.items).toHaveLength(0);
+});

@@ -13,9 +13,10 @@ import {
   FormControlLabel,
   Checkbox,
   Stack,
+  FormHelperText,
 } from "@mui/material";
 
-export default function PartDetailsForm({ partInfo, onChange }) {
+export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
   return (
     <Card sx={{ mb: 1 }}>
       <CardContent>
@@ -27,18 +28,20 @@ export default function PartDetailsForm({ partInfo, onChange }) {
           gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
           gap={1}
         >
-          <Stack
-            direction="row"
-            spacing={1}
-            alignItems="center"
+          <FormControl
+            component="fieldset"
+            error={Boolean(errors.side)}
             sx={{ gridColumn: 1, gridRow: 1 }}
           >
+          <Stack direction="row" spacing={1} alignItems="center">
             <TextField
               size="small"
               label="Part Number"
               name="partNumber"
               value={partInfo.partNumber}
               onChange={onChange}
+              error={Boolean(errors.partNumber)}
+              helperText={errors.partNumber && "Required"}
             />
             <FormControlLabel
               control={
@@ -63,6 +66,8 @@ export default function PartDetailsForm({ partInfo, onChange }) {
               label="Right"
             />
           </Stack>
+          {errors.side && <FormHelperText>Select side</FormHelperText>}
+          </FormControl>
 
           <TextField
             size="small"
@@ -71,6 +76,8 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             value={partInfo.model}
             onChange={onChange}
             sx={{ gridColumn: 2, gridRow: 1 }}
+            error={Boolean(errors.model)}
+            helperText={errors.model && "Required"}
           />
 
           <TextField
@@ -80,6 +87,8 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             value={partInfo.partName}
             onChange={onChange}
             sx={{ gridColumn: 1, gridRow: 2 }}
+            error={Boolean(errors.partName)}
+            helperText={errors.partName && "Required"}
           />
 
           <TextField
@@ -89,6 +98,8 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             value={partInfo.event}
             onChange={onChange}
             sx={{ gridColumn: 2, gridRow: 2 }}
+            error={Boolean(errors.event)}
+            helperText={errors.event && "Required"}
           />
 
           <TextField
@@ -98,6 +109,8 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             value={partInfo.supplier}
             onChange={onChange}
             sx={{ gridColumn: 1, gridRow: 3 }}
+            error={Boolean(errors.supplier)}
+            helperText={errors.supplier && "Required"}
           />
 
           <TextField
@@ -107,12 +120,15 @@ export default function PartDetailsForm({ partInfo, onChange }) {
             value={partInfo.facility}
             onChange={onChange}
             sx={{ gridColumn: 2, gridRow: 3 }}
+            error={Boolean(errors.facility)}
+            helperText={errors.facility && "Required"}
           />
 
           <FormControl
             fullWidth
             size="small"
             sx={{ gridColumn: 1, gridRow: 4 }}
+            error={Boolean(errors.drawingRank)}
           >
             <InputLabel id="drawing-rank-label">Drawing Rank</InputLabel>
             <Select
@@ -127,12 +143,14 @@ export default function PartDetailsForm({ partInfo, onChange }) {
               <MenuItem value="C">C</MenuItem>
               <MenuItem value="None">None</MenuItem>
             </Select>
+            {errors.drawingRank && <FormHelperText>Required</FormHelperText>}
           </FormControl>
 
           <FormControl
             fullWidth
             size="small"
             sx={{ gridColumn: 2, gridRow: 4 }}
+            error={Boolean(errors.regulationPart)}
           >
             <InputLabel id="reg-part-label">Regulation Part</InputLabel>
             <Select
@@ -145,9 +163,14 @@ export default function PartDetailsForm({ partInfo, onChange }) {
               <MenuItem value="Yes">Yes</MenuItem>
               <MenuItem value="No">No</MenuItem>
             </Select>
+            {errors.regulationPart && <FormHelperText>Required</FormHelperText>}
           </FormControl>
 
-          <Box sx={{ gridColumn: "1 / 3", gridRow: 5 }}>
+          <FormControl
+            component="fieldset"
+            sx={{ gridColumn: "1 / 3", gridRow: 5 }}
+            error={Boolean(errors.dp)}
+          >
             <Typography variant="caption">Data Purpose</Typography>
             <Box display="flex" alignItems="center" gap={1}>
               <FormControlLabel
@@ -201,10 +224,13 @@ export default function PartDetailsForm({ partInfo, onChange }) {
                   value={partInfo.dpOtherText}
                   onChange={onChange}
                   placeholder="Other Text"
+                  error={Boolean(errors.dpOtherText)}
+                  helperText={errors.dpOtherText && "Required"}
                 />
               )}
             </Box>
-          </Box>
+            {errors.dp && <FormHelperText>Select at least one</FormHelperText>}
+          </FormControl>
         </Box>
       </CardContent>
     </Card>
