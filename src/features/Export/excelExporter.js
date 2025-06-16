@@ -1,6 +1,51 @@
 // src/features/Export/excelExporter.js
 import XlsxPopulate from 'xlsx-populate/browser/xlsx-populate';
 
+export function prepareExportRows(items) {
+  const grouped = Array.from(new Set(items.map((i) => i.groupId)));
+  const rows = [];
+
+  grouped.forEach((gid, idx) => {
+    const main = items.find((x) => x.groupId === gid && !x.subitem);
+    if (!main) return;
+
+    rows.push([
+      idx + 1,
+      main.name,
+      main.toleranceType,
+      main.nominal,
+      main.usl,
+      main.lsl,
+      main.controlPlan,
+      main.method,
+      main.sampleFreq,
+      main.reportingFreq,
+    ]);
+
+    items
+      .filter((x) => x.groupId === gid && x.subitem)
+      .forEach((item, j) => {
+        rows.push([
+          `${idx + 1}${String.fromCharCode(97 + j)}`,
+          `${item.name} - ${item.subitem}`,
+          item.toleranceType,
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+        ]);
+      });
+  });
+
+  const colOrder = [0, 1, 2, null, null, 6, 7, 8, null, 9, null, 5, 4, null, 3];
+  return rows.map((row) =>
+    colOrder.map((colIdx) => (colIdx === null ? '' : row[colIdx]))
+  );
+}
+
 export async function exportToExcel(partInfo, items) {
   const response = await fetch('/template.xlsx');
   const arrayBuffer = await response.arrayBuffer();
@@ -25,24 +70,8 @@ export async function exportToExcel(partInfo, items) {
   workbook.definedName('Side_L_Box').value(partInfo.sideLeft);
   workbook.definedName('Side_R_Box').value(partInfo.sideRight);
 
-  // Data from Tolerance Table
-  // Read table header and rows from the DOM
-  const table = document.getElementById('items-table');
-  // const headers = Array.from(table.tHead.rows[0].cells)
-  //   .slice(0, 11) // Skip 'No.' and 'Action' columns
-  //   .map(cell => cell.innerText);
-
-  const domData = Array.from(table.tBodies[0].rows).map(row =>
-    Array.from(row.cells)
-      .slice(0, 11) // Match the same columns
-      .map(cell => cell.innerText)
-  );
-  
-  // const headerNames = ['Header_No', 'Header_InspItem', 'Header_TolType', 'Header_CCP', 'Header_Method', 'Header_Sample', 'Header_Reporting', 'Header_LSL', 'Header_USL', 'Header_Nom'];
-  const colOrder = [0,1,2,null,null,6,7,8,null,9,null,5,4,null,3];
-  const domRearranged = domData.map(row => colOrder.map(colIdx => row[colIdx]));
-
-  workbook.definedName('Table_Start1').value(domRearranged)
+  const rows = prepareExportRows(items);
+  workbook.definedName('Table_Start1').value(rows);
 
 const blob = await workbook.outputAsync({ type: 'blob' });
 const url = URL.createObjectURL(blob);
