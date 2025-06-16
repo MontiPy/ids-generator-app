@@ -55,12 +55,14 @@ export default function useGroupedItems() {
         "toleranceType",
         "name",
         "nominal",
-        "usl",
         "controlPlan",
         "method",
         "sampleFreq",
         "reportingFreq",
       ];
+      if (values.itemType !== "Attribute") {
+        required.push("usl");
+      }
 
       const baseComplete = required.every(
         (f) => values[f] && values[f].toString().trim() !== ""

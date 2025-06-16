@@ -58,10 +58,10 @@ export default function IDSPage() {
   const isLSLDisabled = nonLSLTolerances.includes(formValues.toleranceType);
 
   useEffect(() => {
-    if (isLSLDisabled) {
+    if (isLSLDisabled && formValues.itemType !== "Attribute") {
       setFormValues((prev) => ({ ...prev, lsl: "n/a" }));
     }
-  }, [isLSLDisabled, formValues.toleranceType]);
+  }, [isLSLDisabled, formValues.toleranceType, formValues.itemType]);
 
   const resetFormValues = () => {
     setFormValues({
@@ -133,12 +133,14 @@ export default function IDSPage() {
       "toleranceType",
       "name",
       "nominal",
-      "usl",
       "controlPlan",
       "method",
       "sampleFreq",
       "reportingFreq",
     ];
+    if (values.itemType !== "Attribute") {
+      required.push("usl");
+    }
     required.forEach((f) => {
       if (!values[f] || values[f].toString().trim() === "") {
         errors[f] = true;
@@ -183,7 +185,17 @@ export default function IDSPage() {
             formValues={formValues}
             onChange={(e) => {
               const { name, value } = e.target;
-              setFormValues((prev) => ({ ...prev, [name]: value }));
+              setFormValues((prev) => {
+                if (name === 'itemType') {
+                  return {
+                    ...prev,
+                    itemType: value,
+                    usl: value === 'Attribute' ? 'NG' : '',
+                    lsl: value === 'Attribute' ? 'OK' : '',
+                  };
+                }
+                return { ...prev, [name]: value };
+              });
               setItemErrors((prev) => ({ ...prev, [name]: false }));
             }}
             onSubmit={() => {
