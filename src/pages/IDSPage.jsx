@@ -85,6 +85,35 @@ export default function IDSPage() {
   const { items, editGroupId, handleAddOrUpdate, handleEdit, handleDelete } =
     useGroupedItems();
 
+  const arePartDetailsComplete = (info) => {
+    const required = [
+      "partNumber",
+      "model",
+      "partName",
+      "event",
+      "supplier",
+      "facility",
+      "drawingRank",
+      "regulationPart",
+    ];
+    const textComplete = required.every(
+      (field) => info[field] && info[field].toString().trim() !== ""
+    );
+    const sideComplete = info.sideLeft || info.sideRight;
+    const dpComplete =
+      info.dpRegular || info.dpNewModel || info.dpProblem || info.dpOther;
+    const otherComplete = !info.dpOther || info.dpOtherText.trim() !== "";
+    return textComplete && sideComplete && dpComplete && otherComplete;
+  };
+
+  const handleExport = () => {
+    if (!arePartDetailsComplete(partInfo)) {
+      alert("Please complete all Part Details before exporting.");
+      return;
+    }
+    exportToExcel(partInfo, items);
+  };
+
   return (
     <Box p={1}>
       <PartDetailsForm partInfo={partInfo} onChange={handlePartChange} />
@@ -115,7 +144,7 @@ export default function IDSPage() {
 
         <Box flex={1}>
           <ExportButtons
-            onExport={() => exportToExcel(partInfo, items)}
+            onExport={handleExport}
             onDownload={downloadTemplate}
           />
 

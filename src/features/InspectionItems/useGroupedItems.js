@@ -1,6 +1,7 @@
 // src/features/InspectionItems/useGroupedItems.js
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { nonLSLTolerances } from "../../constants/tolerance";
 
 export default function useGroupedItems() {
   const [items, setItems] = useState([]);
@@ -75,7 +76,41 @@ export default function useGroupedItems() {
     tolWithMinMax,
     resetFormValues
   ) => {
-    if (!formValues.name) return;
+    const areItemFieldsComplete = (values) => {
+      const required = [
+        "toleranceType",
+        "name",
+        "nominal",
+        "usl",
+        "controlPlan",
+        "method",
+        "sampleFreq",
+        "reportingFreq",
+      ];
+
+      const baseComplete = required.every(
+        (f) => values[f] && values[f].toString().trim() !== ""
+      );
+
+      const lslNeeded =
+        values.itemType !== "Attribute" &&
+        !nonLSLTolerances.includes(values.toleranceType);
+
+      const lslComplete =
+        !lslNeeded || (values.lsl && values.lsl.toString().trim() !== "");
+
+      const customTolComplete =
+        values.toleranceType !== "Other" ||
+        (values.customToleranceType &&
+          values.customToleranceType.toString().trim() !== "");
+
+      return baseComplete && lslComplete && customTolComplete;
+    };
+
+    if (!areItemFieldsComplete(formValues)) {
+      alert("Please complete all Inspection Item fields.");
+      return;
+    }
 
     // Handle custom tolerance type if "N/A" is selected
     const toleranceType =
