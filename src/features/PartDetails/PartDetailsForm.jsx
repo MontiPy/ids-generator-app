@@ -1,5 +1,5 @@
 // src/features/PartDetails/PartDetailsForm.jsx
-import React from "react";
+import React from 'react';
 import {
   Box,
   Card,
@@ -14,7 +14,7 @@ import {
   Checkbox,
   Stack,
   FormHelperText,
-} from "@mui/material";
+} from '@mui/material';
 
 export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
   return (
@@ -25,7 +25,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
         </Typography>
         <Box
           display="grid"
-          gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+          gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
           gap={1}
         >
           <FormControl
@@ -33,40 +33,40 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
             error={Boolean(errors.side)}
             sx={{ gridColumn: 1, gridRow: 1 }}
           >
-          <Stack direction="row" spacing={1} alignItems="center">
-            <TextField
-              size="small"
-              label="Part Number"
-              name="partNumber"
-              value={partInfo.partNumber}
-              onChange={onChange}
-              error={Boolean(errors.partNumber)}
-              helperText={errors.partNumber && "Required"}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  size="small"
-                  name="sideLeft"
-                  checked={partInfo.sideLeft}
-                  onChange={onChange}
-                />
-              }
-              label="Left"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  size="small"
-                  name="sideRight"
-                  checked={partInfo.sideRight}
-                  onChange={onChange}
-                />
-              }
-              label="Right"
-            />
-          </Stack>
-          {errors.side && <FormHelperText>Select side</FormHelperText>}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <TextField
+                size="small"
+                label="Part Number"
+                name="partNumber"
+                value={partInfo.partNumber}
+                onChange={onChange}
+                error={Boolean(errors.partNumber)}
+                helperText={errors.partNumber && 'Required'}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    size="small"
+                    name="sideLeft"
+                    checked={partInfo.sideLeft}
+                    onChange={onChange}
+                  />
+                }
+                label="Left"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    size="small"
+                    name="sideRight"
+                    checked={partInfo.sideRight}
+                    onChange={onChange}
+                  />
+                }
+                label="Right"
+              />
+              {errors.side && <FormHelperText>Select side</FormHelperText>}
+            </Stack>
           </FormControl>
 
           <TextField
@@ -77,7 +77,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
             onChange={onChange}
             sx={{ gridColumn: 2, gridRow: 1 }}
             error={Boolean(errors.model)}
-            helperText={errors.model && "Required"}
+            helperText={errors.model && 'Required'}
           />
 
           <TextField
@@ -88,7 +88,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
             onChange={onChange}
             sx={{ gridColumn: 1, gridRow: 2 }}
             error={Boolean(errors.partName)}
-            helperText={errors.partName && "Required"}
+            helperText={errors.partName && 'Required'}
           />
 
           <TextField
@@ -99,7 +99,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
             onChange={onChange}
             sx={{ gridColumn: 2, gridRow: 2 }}
             error={Boolean(errors.event)}
-            helperText={errors.event && "Required"}
+            helperText={errors.event && 'Required'}
           />
 
           <TextField
@@ -110,7 +110,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
             onChange={onChange}
             sx={{ gridColumn: 1, gridRow: 3 }}
             error={Boolean(errors.supplier)}
-            helperText={errors.supplier && "Required"}
+            helperText={errors.supplier && 'Required'}
           />
 
           <TextField
@@ -121,7 +121,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
             onChange={onChange}
             sx={{ gridColumn: 2, gridRow: 3 }}
             error={Boolean(errors.facility)}
-            helperText={errors.facility && "Required"}
+            helperText={errors.facility && 'Required'}
           />
 
           <FormControl
@@ -168,7 +168,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
 
           <FormControl
             component="fieldset"
-            sx={{ gridColumn: "1 / 3", gridRow: 5 }}
+            sx={{ gridColumn: '1 / 3', gridRow: 5 }}
             error={Boolean(errors.dp)}
           >
             <Typography variant="caption">Data Purpose</Typography>
@@ -225,7 +225,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
                   onChange={onChange}
                   placeholder="Other Text"
                   error={Boolean(errors.dpOtherText)}
-                  helperText={errors.dpOtherText && "Required"}
+                  helperText={errors.dpOtherText && 'Required'}
                 />
               )}
             </Box>
