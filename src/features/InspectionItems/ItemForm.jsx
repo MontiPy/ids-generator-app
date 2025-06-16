@@ -154,7 +154,7 @@ export default function ItemForm({
             size="small"
             label="USL"
             name="usl"
-            value={formValues.itemType === "Attribute" ? "NG" : formValues.usl}
+            value={formValues.usl}
             onChange={onChange}
             disabled={formValues.itemType === "Attribute"}
             error={Boolean(errors.usl)}
@@ -164,7 +164,7 @@ export default function ItemForm({
             size="small"
             label="LSL"
             name="lsl"
-            value={formValues.itemType === "Attribute" ? "OK" : formValues.lsl}
+            value={formValues.lsl}
             onChange={onChange}
             disabled={formValues.itemType === "Attribute" || isLSLDisabled}
             error={Boolean(errors.lsl)}

@@ -20,54 +20,28 @@ export default function useGroupedItems() {
       reportingFreq,
     } = formValues;
 
-    if (tolWithXY.includes(toleranceType)) {
-      return ["", "X", "Y"].map((sub) => ({
-        id: uuidv4(),
-        groupId,
-        name,
-        toleranceType,
-        subitem: sub,
-        nominal,
-        usl,
-        lsl,
-        controlPlan,
-        method,
-        sampleFreq,
-        reportingFreq,
-      }));
-    }
-    if (tolWithMinMax.includes(toleranceType)) {
-      return ["", "Min", "Max"].map((sub) => ({
-        id: uuidv4(),
-        groupId,
-        name,
-        toleranceType,
-        subitem: sub,
-        nominal,
-        usl,
-        lsl,
-        controlPlan,
-        method,
-        sampleFreq,
-        reportingFreq,
-      }));
-    }
-    return [
-      {
-        id: uuidv4(),
-        groupId,
-        name,
-        toleranceType,
-        subitem: "",
-        nominal,
-        usl,
-        lsl,
-        controlPlan,
-        method,
-        sampleFreq,
-        reportingFreq,
-      },
-    ];
+    const subs = tolWithXY.includes(toleranceType)
+      ? ["", "X", "Y"]
+      : tolWithMinMax.includes(toleranceType)
+      ? ["", "Min", "Max"]
+      : [""];
+
+    const createItem = (sub) => ({
+      id: uuidv4(),
+      groupId,
+      name,
+      toleranceType,
+      subitem: sub,
+      nominal,
+      usl,
+      lsl,
+      controlPlan,
+      method,
+      sampleFreq,
+      reportingFreq,
+    });
+
+    return subs.map(createItem);
   };
 
   const handleAddOrUpdate = (
@@ -81,12 +55,14 @@ export default function useGroupedItems() {
         "toleranceType",
         "name",
         "nominal",
-        "usl",
         "controlPlan",
         "method",
         "sampleFreq",
         "reportingFreq",
       ];
+      if (values.itemType !== "Attribute") {
+        required.push("usl");
+      }
 
       const baseComplete = required.every(
         (f) => values[f] && values[f].toString().trim() !== ""
