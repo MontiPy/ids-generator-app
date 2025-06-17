@@ -1,15 +1,12 @@
 // src/pages/IDSPage.jsx
-import React, { useState, useEffect } from "react";
-import { Box, Stack } from "@mui/material";
-import PartDetailsForm from "../features/PartDetails/PartDetailsForm";
-import ItemForm from "../features/InspectionItems/ItemForm";
-import ItemsTable from "../features/InspectionItems/ItemsTable";
-import useGroupedItems from "../features/InspectionItems/useGroupedItems";
-import {
-  exportToExcel,
-  downloadTemplate,
-} from "../features/Export/excelExporter";
-import ExportButtons from "../features/Export/ExportButtons";
+import React, { useState, useEffect } from 'react';
+import { Box, Stack } from '@mui/material';
+import PartDetailsForm from '../features/PartDetails/PartDetailsForm';
+import ItemForm from '../features/InspectionItems/ItemForm';
+import ItemsTable from '../features/InspectionItems/ItemsTable';
+import useGroupedItems from '../features/InspectionItems/useGroupedItems';
+import { exportToExcel, downloadTemplate } from '../features/Export/excelExporter';
+import ExportButtons from '../features/Export/ExportButtons';
 import {
   toleranceGroups,
   toleranceIcons,
@@ -17,40 +14,40 @@ import {
   nonLSLTolerances,
   tolWithXY,
   tolWithMinMax,
-} from "../constants/tolerance";
+} from '../constants/tolerance';
 
 export default function IDSPage() {
   const [partInfo, setPartInfo] = useState({
-    partNumber: "",
-    partName: "",
-    supplier: "",
-    model: "",
-    event: "",
-    facility: "",
-    drawingRank: "",
-    regulationPart: "",
+    partNumber: '',
+    partName: '',
+    supplier: '',
+    model: '',
+    event: '',
+    facility: '',
+    drawingRank: '',
+    regulationPart: '',
     sideLeft: false,
     sideRight: false,
     dpRegular: false,
     dpNewModel: false,
     dpProblem: false,
     dpOther: false,
-    dpOtherText: "",
+    dpOtherText: '',
   });
 
   const [partErrors, setPartErrors] = useState({});
 
   const [formValues, setFormValues] = useState({
-    name: "",
-    toleranceType: "",
-    itemType: "Variable",
-    nominal: "",
-    usl: "",
-    lsl: "",
-    controlPlan: "N/A",
-    method: "",
-    sampleFreq: "",
-    reportingFreq: "",
+    name: '',
+    toleranceType: '',
+    itemType: 'Variable',
+    nominal: '',
+    usl: '',
+    lsl: '',
+    controlPlan: 'N/A',
+    method: '',
+    sampleFreq: '',
+    reportingFreq: '',
   });
 
   const [itemErrors, setItemErrors] = useState({});
@@ -58,23 +55,23 @@ export default function IDSPage() {
   const isLSLDisabled = nonLSLTolerances.includes(formValues.toleranceType);
 
   useEffect(() => {
-    if (isLSLDisabled && formValues.itemType !== "Attribute") {
-      setFormValues((prev) => ({ ...prev, lsl: "n/a" }));
+    if (isLSLDisabled && formValues.itemType !== 'Attribute') {
+      setFormValues((prev) => ({ ...prev, lsl: 'n/a' }));
     }
   }, [isLSLDisabled, formValues.toleranceType, formValues.itemType]);
 
   const resetFormValues = () => {
     setFormValues({
-      name: "",
-      toleranceType: "",
-      itemType: "Variable",
-      nominal: "",
-      usl: "",
-      lsl: "",
-      controlPlan: "N/A",
-      method: "",
-      sampleFreq: "",
-      reportingFreq: "",
+      name: '',
+      toleranceType: '',
+      itemType: 'Variable',
+      nominal: '',
+      usl: '',
+      lsl: '',
+      controlPlan: 'N/A',
+      method: '',
+      sampleFreq: '',
+      reportingFreq: '',
     });
   };
 
@@ -82,15 +79,15 @@ export default function IDSPage() {
     const { name, value, type, checked } = e.target;
     setPartInfo((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     setPartErrors((prev) => {
       const newErr = { ...prev };
-      if (name === "sideLeft" || name === "sideRight") {
+      if (name === 'sideLeft' || name === 'sideRight') {
         newErr.side = false;
-      } else if (name.startsWith("dp")) {
+      } else if (name.startsWith('dp')) {
         newErr.dp = false;
-        if (name === "dpOtherText") {
+        if (name === 'dpOtherText') {
           newErr.dpOtherText = false;
         }
       } else {
@@ -100,61 +97,58 @@ export default function IDSPage() {
     });
   };
 
-  const { items, editGroupId, handleAddOrUpdate, handleEdit, handleDelete } =
-    useGroupedItems();
+  const { items, editGroupId, handleAddOrUpdate, handleEdit, handleDelete } = useGroupedItems();
 
   const validatePartDetails = (info) => {
     const errors = {};
     const required = [
-      "partNumber",
-      "model",
-      "partName",
-      "event",
-      "supplier",
-      "facility",
-      "drawingRank",
-      "regulationPart",
+      'partNumber',
+      'model',
+      'partName',
+      'event',
+      'supplier',
+      'facility',
+      'drawingRank',
+      'regulationPart',
     ];
     required.forEach((f) => {
-      if (!info[f] || info[f].toString().trim() === "") {
+      if (!info[f] || info[f].toString().trim() === '') {
         errors[f] = true;
       }
     });
     if (!info.sideLeft && !info.sideRight) errors.side = true;
-    if (!info.dpRegular && !info.dpNewModel && !info.dpProblem && !info.dpOther)
-      errors.dp = true;
-    if (info.dpOther && info.dpOtherText.trim() === "") errors.dpOtherText = true;
+    if (!info.dpRegular && !info.dpNewModel && !info.dpProblem && !info.dpOther) errors.dp = true;
+    if (info.dpOther && info.dpOtherText.trim() === '') errors.dpOtherText = true;
     return errors;
   };
 
   const validateItemFields = (values) => {
     const errors = {};
     const required = [
-      "toleranceType",
-      "name",
-      "nominal",
-      "controlPlan",
-      "method",
-      "sampleFreq",
-      "reportingFreq",
+      'toleranceType',
+      'name',
+      'nominal',
+      'controlPlan',
+      'method',
+      'sampleFreq',
+      'reportingFreq',
     ];
-    if (values.itemType !== "Attribute") {
-      required.push("usl");
+    if (values.itemType !== 'Attribute') {
+      required.push('usl');
     }
     required.forEach((f) => {
-      if (!values[f] || values[f].toString().trim() === "") {
+      if (!values[f] || values[f].toString().trim() === '') {
         errors[f] = true;
       }
     });
     const lslNeeded =
-      values.itemType !== "Attribute" &&
-      !nonLSLTolerances.includes(values.toleranceType);
-    if (lslNeeded && (!values.lsl || values.lsl.toString().trim() === "")) {
+      values.itemType !== 'Attribute' && !nonLSLTolerances.includes(values.toleranceType);
+    if (lslNeeded && (!values.lsl || values.lsl.toString().trim() === '')) {
       errors.lsl = true;
     }
     if (
-      values.toleranceType === "Other" &&
-      (!values.customToleranceType || values.customToleranceType.trim() === "")
+      values.toleranceType === 'Other' &&
+      (!values.customToleranceType || values.customToleranceType.trim() === '')
     ) {
       errors.customToleranceType = true;
     }
@@ -173,13 +167,9 @@ export default function IDSPage() {
 
   return (
     <Box p={1}>
-      <PartDetailsForm
-        partInfo={partInfo}
-        onChange={handlePartChange}
-        errors={partErrors}
-      />
+      <PartDetailsForm partInfo={partInfo} onChange={handlePartChange} errors={partErrors} />
 
-      <Stack direction={{ xs: "column", md: "row" }} spacing={1}>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={1}>
         <Box minWidth={250}>
           <ItemForm
             formValues={formValues}
@@ -205,12 +195,7 @@ export default function IDSPage() {
                 return;
               }
               setItemErrors({});
-              handleAddOrUpdate(
-                formValues,
-                tolWithXY,
-                tolWithMinMax,
-                resetFormValues
-              );
+              handleAddOrUpdate(formValues, tolWithXY, tolWithMinMax, resetFormValues);
             }}
             isEdit={Boolean(editGroupId)}
             isLSLDisabled={isLSLDisabled}
@@ -222,10 +207,7 @@ export default function IDSPage() {
         </Box>
 
         <Box flex={1}>
-          <ExportButtons
-            onExport={handleExport}
-            onDownload={downloadTemplate}
-          />
+          <ExportButtons onExport={handleExport} onDownload={downloadTemplate} />
 
           <ItemsTable
             items={items}

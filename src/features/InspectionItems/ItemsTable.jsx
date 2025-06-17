@@ -1,5 +1,5 @@
 // src/features/InspectionItems/ItemsTable.jsx
-import React from "react";
+import React from 'react';
 import {
   IconButton,
   Paper,
@@ -9,8 +9,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from "@mui/material";
-import { Edit, Delete } from "lucide-react";
+} from '@mui/material';
+import { Edit, Delete } from 'lucide-react';
 
 export default function ItemsTable({ items, onEdit, onDelete }) {
   const grouped = Array.from(new Set(items.map((i) => i.groupId)));
@@ -40,10 +40,8 @@ export default function ItemsTable({ items, onEdit, onDelete }) {
               <React.Fragment key={gid}>
                 <TableRow hover>
                   <TableCell sx={{ py: 0.5 }}>{idx + 1}</TableCell>
-                  <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
-                    {groupItem.name}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", py: 0.5 }}>
+                  <TableCell sx={{ fontWeight: 'bold', py: 0.5 }}>{groupItem.name}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', py: 0.5 }}>
                     {groupItem.toleranceType}
                   </TableCell>
                   <TableCell sx={{ py: 0.5 }}>{groupItem.nominal}</TableCell>

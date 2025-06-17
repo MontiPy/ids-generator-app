@@ -14,11 +14,11 @@ test('adds a single item when tolerance type has no subitems', () => {
         controlPlan: 'N/A',
         method: '',
         sampleFreq: '',
-        reportingFreq: ''
+        reportingFreq: '',
       },
       [],
       [],
-      () => {}
+      () => {},
     );
   });
   expect(result.current.items).toHaveLength(1);
@@ -37,11 +37,11 @@ test('adds subitems when tolerance type requires XY', () => {
         controlPlan: 'N/A',
         method: '',
         sampleFreq: '',
-        reportingFreq: ''
+        reportingFreq: '',
       },
       ['Radial'],
       [],
-      () => {}
+      () => {},
     );
   });
   expect(result.current.items).toHaveLength(3);
@@ -60,11 +60,11 @@ test('does not add item when required fields are missing', () => {
         controlPlan: 'N/A',
         method: '',
         sampleFreq: '',
-        reportingFreq: ''
+        reportingFreq: '',
       },
       [],
       [],
-      () => {}
+      () => {},
     );
   });
   expect(result.current.items).toHaveLength(0);

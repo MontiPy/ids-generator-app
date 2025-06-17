@@ -23,11 +23,7 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
         <Typography variant="subtitle1" gutterBottom>
           Part Details
         </Typography>
-        <Box
-          display="grid"
-          gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
-          gap={1}
-        >
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={1}>
           <FormControl
             component="fieldset"
             error={Boolean(errors.side)}

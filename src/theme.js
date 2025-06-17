@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
@@ -11,21 +11,21 @@ const theme = createTheme({
   },
   typography: {
     allVariants: {
-      fontFamily: "Yu Gothic",
+      fontFamily: 'Yu Gothic',
       fontSize: 14,
     },
   },
   components: {
     MuiButton: {
       defaultProps: {
-        size: "small",
-        variant: "outlined",
+        size: 'small',
+        variant: 'outlined',
       },
     },
     MuiListSubheader: {
       styleOverrides: {
         root: {
-          fontFamily: "Yu Gothic",
+          fontFamily: 'Yu Gothic',
         },
       },
     },

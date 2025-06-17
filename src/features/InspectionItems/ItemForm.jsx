@@ -40,11 +40,7 @@ export default function ItemForm({
           </Typography>
           <Stack spacing={1}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <FormControl
-                sx={{ flex: 1 }}
-                size="small"
-                error={Boolean(errors.toleranceType)}
-              >
+              <FormControl sx={{ flex: 1 }} size="small" error={Boolean(errors.toleranceType)}>
                 <InputLabel id="tol-type-label">Tolerance</InputLabel>
                 <Select
                   labelId="tol-type-label"
@@ -67,11 +63,7 @@ export default function ItemForm({
                       {group}
                     </ListSubheader>,
                     ...types.map((type) => (
-                      <MenuItem
-                        key={type}
-                        value={type}
-                        sx={{ pl: 3, fontSize: '0.8rem' }}
-                      >
+                      <MenuItem key={type} value={type} sx={{ pl: 3, fontSize: '0.8rem' }}>
                         <Box
                           component="img"
                           src={toleranceIcons[type]}
@@ -92,9 +84,7 @@ export default function ItemForm({
                     <Box component="span">Not Listed</Box>
                   </MenuItem>
                 </Select>
-                {errors.toleranceType && (
-                  <FormHelperText>Required</FormHelperText>
-                )}
+                {errors.toleranceType && <FormHelperText>Required</FormHelperText>}
               </FormControl>
 
               {/* Conditionally render the input box for "Not Listed" */}
@@ -131,22 +121,9 @@ export default function ItemForm({
             />
 
             <FormControl component="fieldset" size="small">
-              <RadioGroup
-                row
-                name="itemType"
-                value={formValues.itemType}
-                onChange={onChange}
-              >
-                <FormControlLabel
-                  value="Variable"
-                  control={<Radio />}
-                  label="Variable"
-                />
-                <FormControlLabel
-                  value="Attribute"
-                  control={<Radio />}
-                  label="Attribute"
-                />
+              <RadioGroup row name="itemType" value={formValues.itemType} onChange={onChange}>
+                <FormControlLabel value="Variable" control={<Radio />} label="Variable" />
+                <FormControlLabel value="Attribute" control={<Radio />} label="Attribute" />
               </RadioGroup>
             </FormControl>
 
@@ -187,24 +164,18 @@ export default function ItemForm({
                 <>
                   Mark N/A if the point is not a CCP or KQP <br />
                   <br />
-                  CCP and KQP points are identified to ensure visibility of
-                  these items is maintained. <br />
+                  CCP and KQP points are identified to ensure visibility of these items is
+                  maintained. <br />
                   <br />
-                  CCP (Critical Control Point)- These line items are critical
-                  points that require variable data and statistical analysis to
-                  ensure part performance. <br />
+                  CCP (Critical Control Point)- These line items are critical points that require
+                  variable data and statistical analysis to ensure part performance. <br />
                   <br />
-                  KQP (Key Quality Point)- These line items are key points that
-                  ensure part performance, but do not require statistical
-                  analysis.
+                  KQP (Key Quality Point)- These line items are key points that ensure part
+                  performance, but do not require statistical analysis.
                 </>
               }
             >
-              <FormControl
-                fullWidth
-                size="small"
-                error={Boolean(errors.controlPlan)}
-              >
+              <FormControl fullWidth size="small" error={Boolean(errors.controlPlan)}>
                 <InputLabel id="cp-label">CCP/KQP/GMP</InputLabel>
                 <Select
                   labelId="cp-label"
@@ -220,9 +191,7 @@ export default function ItemForm({
                     </MenuItem>
                   ))}
                 </Select>
-                {errors.controlPlan && (
-                  <FormHelperText>Required</FormHelperText>
-                )}
+                {errors.controlPlan && <FormHelperText>Required</FormHelperText>}
               </FormControl>
             </Tooltip>
 

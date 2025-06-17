@@ -46,9 +46,7 @@ export function prepareExportRows(items) {
   });
 
   const colOrder = [0, 1, 2, null, null, 6, 7, 8, null, 9, null, 5, 4, null, 3];
-  return rows.map((row) =>
-    colOrder.map((colIdx) => (colIdx === null ? '' : row[colIdx]))
-  );
+  return rows.map((row) => colOrder.map((colIdx) => (colIdx === null ? '' : row[colIdx])));
 }
 
 export async function exportToExcel(partInfo, items) {
@@ -77,19 +75,19 @@ export async function exportToExcel(partInfo, items) {
   const rows = prepareExportRows(items);
   workbook.definedName('Table_Start1').value(rows);
 
-const blob = await workbook.outputAsync({ type: 'blob' });
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = 'IDS_Populated.xlsx';
-a.click();
-URL.revokeObjectURL(url);
+  const blob = await workbook.outputAsync({ type: 'blob' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'IDS_Populated.xlsx';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 export async function downloadTemplate() {
   const arrayBuffer = await fetchTemplate();
   const blob = new Blob([arrayBuffer], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');

@@ -13,7 +13,7 @@ const sampleItems = [
     method: 'Gauge',
     sampleFreq: '1/shift',
     reportingFreq: 'Monthly',
-    subitem: ''
+    subitem: '',
   },
   {
     id: '2',
@@ -27,8 +27,8 @@ const sampleItems = [
     method: 'Gauge',
     sampleFreq: '1/shift',
     reportingFreq: 'Monthly',
-    subitem: 'X'
-  }
+    subitem: 'X',
+  },
 ];
 
 test('prepareExportRows maps items to excel rows', () => {
