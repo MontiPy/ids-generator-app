@@ -1,6 +1,14 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#da251d', // Honda red
+    },
+    secondary: {
+      main: '#000000',
+    },
+  },
   typography: {
     allVariants: {
       fontFamily: "Yu Gothic",
