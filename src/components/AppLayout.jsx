@@ -8,7 +8,7 @@ export default function AppLayout() {
   return (
     <ThemeProvider theme={theme}>
       <Box p={2} sx={{ bgcolor: '#f5f5f5', minHeight: '100vh' }}>
-        <Box sx={{ p: 1, bgcolor: 'primary.main', color: '#fff' }}>
+        <Box sx={{ p: 1, bgcolor: 'primary.main', color: '#fff', borderRadius: 2 }}>
           <Typography
             variant="h5"
             align="center"
