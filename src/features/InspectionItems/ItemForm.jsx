@@ -1,5 +1,6 @@
 // src/features/InspectionItems/ItemForm.jsx
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Button,
@@ -20,7 +21,7 @@ import {
   CardContent,
 } from '@mui/material';
 
-export default function ItemForm({
+function ItemForm({
   formValues,
   onChange,
   onSubmit,
@@ -243,3 +244,29 @@ export default function ItemForm({
     </Card>
   );
 }
+
+ItemForm.propTypes = {
+  formValues: PropTypes.shape({
+    name: PropTypes.string,
+    toleranceType: PropTypes.string,
+    itemType: PropTypes.string,
+    nominal: PropTypes.string,
+    usl: PropTypes.string,
+    lsl: PropTypes.string,
+    controlPlan: PropTypes.string,
+    method: PropTypes.string,
+    sampleFreq: PropTypes.string,
+    reportingFreq: PropTypes.string,
+    customToleranceType: PropTypes.string,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool,
+  isLSLDisabled: PropTypes.bool,
+  toleranceGroups: PropTypes.object.isRequired,
+  toleranceIcons: PropTypes.object.isRequired,
+  controlPlans: PropTypes.arrayOf(PropTypes.string).isRequired,
+  errors: PropTypes.object,
+};
+
+export default ItemForm;

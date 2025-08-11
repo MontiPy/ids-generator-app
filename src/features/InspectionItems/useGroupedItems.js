@@ -1,7 +1,7 @@
 // src/features/InspectionItems/useGroupedItems.js
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { nonLSLTolerances } from '../../constants/tolerance';
+import { areItemFieldsComplete } from '../../hooks/useFormValidation';
 
 export default function useGroupedItems() {
   const [items, setItems] = useState([]);
@@ -45,34 +45,6 @@ export default function useGroupedItems() {
   };
 
   const handleAddOrUpdate = (formValues, tolWithXY, tolWithMinMax, resetFormValues) => {
-    const areItemFieldsComplete = (values) => {
-      const required = [
-        'toleranceType',
-        'name',
-        'nominal',
-        'controlPlan',
-        'method',
-        'sampleFreq',
-        'reportingFreq',
-      ];
-      if (values.itemType !== 'Attribute') {
-        required.push('usl');
-      }
-
-      const baseComplete = required.every((f) => values[f] && values[f].toString().trim() !== '');
-
-      const lslNeeded =
-        values.itemType !== 'Attribute' && !nonLSLTolerances.includes(values.toleranceType);
-
-      const lslComplete = !lslNeeded || (values.lsl && values.lsl.toString().trim() !== '');
-
-      const customTolComplete =
-        values.toleranceType !== 'Other' ||
-        (values.customToleranceType && values.customToleranceType.toString().trim() !== '');
-
-      return baseComplete && lslComplete && customTolComplete;
-    };
-
     if (!areItemFieldsComplete(formValues)) {
       return;
     }

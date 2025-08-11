@@ -1,5 +1,6 @@
 // src/features/PartDetails/PartDetailsForm.jsx
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Card,
@@ -16,7 +17,7 @@ import {
   FormHelperText,
 } from '@mui/material';
 
-export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
+function PartDetailsForm({ partInfo, onChange, errors = {} }) {
   return (
     <Card sx={{ mb: 1 }}>
       <CardContent>
@@ -232,3 +233,27 @@ export default function PartDetailsForm({ partInfo, onChange, errors = {} }) {
     </Card>
   );
 }
+
+PartDetailsForm.propTypes = {
+  partInfo: PropTypes.shape({
+    partNumber: PropTypes.string,
+    partName: PropTypes.string,
+    supplier: PropTypes.string,
+    model: PropTypes.string,
+    event: PropTypes.string,
+    facility: PropTypes.string,
+    drawingRank: PropTypes.string,
+    regulationPart: PropTypes.string,
+    sideLeft: PropTypes.bool,
+    sideRight: PropTypes.bool,
+    dpRegular: PropTypes.bool,
+    dpNewModel: PropTypes.bool,
+    dpProblem: PropTypes.bool,
+    dpOther: PropTypes.bool,
+    dpOtherText: PropTypes.string,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  errors: PropTypes.object,
+};
+
+export default PartDetailsForm;

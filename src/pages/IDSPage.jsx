@@ -1,221 +1,122 @@
 // src/pages/IDSPage.jsx
-import React, { useState, useEffect } from 'react';
-import { Box, Stack } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Stack, Alert, Snackbar } from '@mui/material';
 import PartDetailsForm from '../features/PartDetails/PartDetailsForm';
 import ItemForm from '../features/InspectionItems/ItemForm';
 import ItemsTable from '../features/InspectionItems/ItemsTable';
 import useGroupedItems from '../features/InspectionItems/useGroupedItems';
+import { usePartDetails } from '../hooks/usePartDetails';
+import { useInspectionItems } from '../hooks/useInspectionItems';
 import { exportToExcel, downloadTemplate } from '../features/Export/excelExporter';
 import ExportButtons from '../features/Export/ExportButtons';
+import ErrorBoundary from '../components/ErrorBoundary';
 import {
   toleranceGroups,
   toleranceIcons,
   controlPlans,
-  nonLSLTolerances,
   tolWithXY,
   tolWithMinMax,
 } from '../constants/tolerance';
 
 export default function IDSPage() {
-  const [partInfo, setPartInfo] = useState({
-    partNumber: '',
-    partName: '',
-    supplier: '',
-    model: '',
-    event: '',
-    facility: '',
-    drawingRank: '',
-    regulationPart: '',
-    sideLeft: false,
-    sideRight: false,
-    dpRegular: false,
-    dpNewModel: false,
-    dpProblem: false,
-    dpOther: false,
-    dpOtherText: '',
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const [partErrors, setPartErrors] = useState({});
-
-  const [formValues, setFormValues] = useState({
-    name: '',
-    toleranceType: '',
-    itemType: 'Variable',
-    nominal: '',
-    usl: '',
-    lsl: '',
-    controlPlan: 'N/A',
-    method: '',
-    sampleFreq: '',
-    reportingFreq: '',
-  });
-
-  const [itemErrors, setItemErrors] = useState({});
-
-  const isLSLDisabled = nonLSLTolerances.includes(formValues.toleranceType);
-
-  useEffect(() => {
-    if (isLSLDisabled && formValues.itemType !== 'Attribute') {
-      setFormValues((prev) => ({ ...prev, lsl: 'n/a' }));
-    }
-  }, [isLSLDisabled, formValues.toleranceType, formValues.itemType]);
-
-  const resetFormValues = () => {
-    setFormValues({
-      name: '',
-      toleranceType: '',
-      itemType: 'Variable',
-      nominal: '',
-      usl: '',
-      lsl: '',
-      controlPlan: 'N/A',
-      method: '',
-      sampleFreq: '',
-      reportingFreq: '',
-    });
-  };
-
-  const handlePartChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setPartInfo((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-    setPartErrors((prev) => {
-      const newErr = { ...prev };
-      if (name === 'sideLeft' || name === 'sideRight') {
-        newErr.side = false;
-      } else if (name.startsWith('dp')) {
-        newErr.dp = false;
-        if (name === 'dpOtherText') {
-          newErr.dpOtherText = false;
-        }
-      } else {
-        newErr[name] = false;
-      }
-      return newErr;
-    });
-  };
+  const { partInfo, partErrors, handlePartChange, validatePart } = usePartDetails();
+  const {
+    formValues,
+    setFormValues,
+    itemErrors,
+    isLSLDisabled,
+    resetFormValues,
+    handleFormChange,
+    validateItems,
+  } = useInspectionItems();
 
   const { items, editGroupId, handleAddOrUpdate, handleEdit, handleDelete } = useGroupedItems();
 
-  const validatePartDetails = (info) => {
-    const errors = {};
-    const required = [
-      'partNumber',
-      'model',
-      'partName',
-      'event',
-      'supplier',
-      'facility',
-      'drawingRank',
-      'regulationPart',
-    ];
-    required.forEach((f) => {
-      if (!info[f] || info[f].toString().trim() === '') {
-        errors[f] = true;
-      }
-    });
-    if (!info.sideLeft && !info.sideRight) errors.side = true;
-    if (!info.dpRegular && !info.dpNewModel && !info.dpProblem && !info.dpOther) errors.dp = true;
-    if (info.dpOther && info.dpOtherText.trim() === '') errors.dpOtherText = true;
-    return errors;
+  const handleError = (errorMessage) => {
+    setError(errorMessage);
+    setSnackbarOpen(true);
   };
 
-  const validateItemFields = (values) => {
-    const errors = {};
-    const required = [
-      'toleranceType',
-      'name',
-      'nominal',
-      'controlPlan',
-      'method',
-      'sampleFreq',
-      'reportingFreq',
-    ];
-    if (values.itemType !== 'Attribute') {
-      required.push('usl');
-    }
-    required.forEach((f) => {
-      if (!values[f] || values[f].toString().trim() === '') {
-        errors[f] = true;
-      }
-    });
-    const lslNeeded =
-      values.itemType !== 'Attribute' && !nonLSLTolerances.includes(values.toleranceType);
-    if (lslNeeded && (!values.lsl || values.lsl.toString().trim() === '')) {
-      errors.lsl = true;
-    }
-    if (
-      values.toleranceType === 'Other' &&
-      (!values.customToleranceType || values.customToleranceType.trim() === '')
-    ) {
-      errors.customToleranceType = true;
-    }
-    return errors;
-  };
-
-  const handleExport = () => {
-    const errs = validatePartDetails(partInfo);
-    if (Object.keys(errs).length) {
-      setPartErrors(errs);
+  const handleExport = async () => {
+    if (!validatePart()) {
       return;
     }
-    setPartErrors({});
-    exportToExcel(partInfo, items);
+
+    try {
+      await exportToExcel(partInfo, items, setLoading, handleError);
+    } catch (err) {
+      // Error already handled by exportToExcel
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      await downloadTemplate(setLoading, handleError);
+    } catch (err) {
+      // Error already handled by downloadTemplate
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+    setError('');
   };
 
   return (
-    <Box p={1}>
-      <PartDetailsForm partInfo={partInfo} onChange={handlePartChange} errors={partErrors} />
+    <ErrorBoundary>
+      <Box p={1}>
+        <PartDetailsForm partInfo={partInfo} onChange={handlePartChange} errors={partErrors} />
 
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={1}>
-        <Box minWidth={250}>
-          <ItemForm
-            formValues={formValues}
-            onChange={(e) => {
-              const { name, value } = e.target;
-              setFormValues((prev) => {
-                if (name === 'itemType') {
-                  return {
-                    ...prev,
-                    itemType: value,
-                    usl: value === 'Attribute' ? 'NG' : '',
-                    lsl: value === 'Attribute' ? 'OK' : '',
-                  };
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={1}>
+          <Box minWidth={250}>
+            <ItemForm
+              formValues={formValues}
+              onChange={handleFormChange}
+              onSubmit={() => {
+                if (!validateItems()) {
+                  return;
                 }
-                return { ...prev, [name]: value };
-              });
-              setItemErrors((prev) => ({ ...prev, [name]: false }));
-            }}
-            onSubmit={() => {
-              const errs = validateItemFields(formValues);
-              if (Object.keys(errs).length) {
-                setItemErrors(errs);
-                return;
-              }
-              setItemErrors({});
-              handleAddOrUpdate(formValues, tolWithXY, tolWithMinMax, resetFormValues);
-            }}
-            isEdit={Boolean(editGroupId)}
-            isLSLDisabled={isLSLDisabled}
-            toleranceGroups={toleranceGroups}
-            toleranceIcons={toleranceIcons}
-            controlPlans={controlPlans}
-            errors={itemErrors}
-          />
-        </Box>
+                handleAddOrUpdate(formValues, tolWithXY, tolWithMinMax, resetFormValues);
+              }}
+              isEdit={Boolean(editGroupId)}
+              isLSLDisabled={isLSLDisabled}
+              toleranceGroups={toleranceGroups}
+              toleranceIcons={toleranceIcons}
+              controlPlans={controlPlans}
+              errors={itemErrors}
+            />
+          </Box>
 
-        <Box flex={1}>
-          <ExportButtons onExport={handleExport} onDownload={downloadTemplate} />
+          <Box flex={1}>
+            <ExportButtons
+              onExport={handleExport}
+              onDownload={handleDownloadTemplate}
+              loading={loading}
+            />
 
-          <ItemsTable
-            items={items}
-            onEdit={(gid) => handleEdit(gid, setFormValues)}
-            onDelete={(gid) => handleDelete(gid, resetFormValues)}
-          />
-        </Box>
-      </Stack>
-    </Box>
+            <ItemsTable
+              items={items}
+              onEdit={(gid) => handleEdit(gid, setFormValues)}
+              onDelete={(gid) => handleDelete(gid, resetFormValues)}
+            />
+          </Box>
+        </Stack>
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+            {error}
+          </Alert>
+        </Snackbar>
+      </Box>
+    </ErrorBoundary>
   );
 }
