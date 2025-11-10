@@ -22,14 +22,19 @@ export function prepareExportRows(items) {
     const main = items.find((x) => x.groupId === gid && !x.subitem);
     if (!main) return;
 
+    // Handle unequal profile tolerances
+    const usl = main.isUnequalProfile ? `+${main.upperTolerance}` : main.usl;
+    const lsl = main.isUnequalProfile ? `-${main.lowerTolerance}` : main.lsl;
+
     rows.push([
       idx + 1,
       main.name,
       main.toleranceType,
       main.nominal,
-      main.usl,
-      main.lsl,
+      usl,
+      lsl,
       main.controlPlan,
+      main.evaluationMethod || '',
       main.method,
       main.sampleFreq,
       main.reportingFreq,
@@ -49,11 +54,12 @@ export function prepareExportRows(items) {
           '',
           '',
           '',
+          '',
         ]);
       });
   });
 
-  const colOrder = [0, 1, 2, null, null, 6, 7, 8, null, 9, null, 5, 4, null, 3];
+  const colOrder = [0, 1, 2, null, 7, 6, 8, null, 9, null, 10, 5, 4, null, 3];
   return rows.map((row) => colOrder.map((colIdx) => (colIdx === null ? '' : row[colIdx])));
 }
 

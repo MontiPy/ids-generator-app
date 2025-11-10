@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -20,6 +21,7 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
+import { tolWithMinMax } from '../../constants/tolerance';
 
 function ItemForm({
   formValues,
@@ -32,6 +34,7 @@ function ItemForm({
   controlPlans,
   errors = {},
 }) {
+  const isProfileTolerance = tolWithMinMax.includes(formValues.toleranceType);
   return (
     <Card sx={{ mb: 1 }}>
       <CardContent>
@@ -128,6 +131,48 @@ function ItemForm({
               </RadioGroup>
             </FormControl>
 
+            <FormControl fullWidth size="small">
+              <InputLabel id="eval-method-label">Mass Pro Evaluation Method</InputLabel>
+              <Select
+                labelId="eval-method-label"
+                name="evaluationMethod"
+                value={formValues.evaluationMethod}
+                label="Mass Pro Evaluation Method"
+                onChange={onChange}
+                size="small"
+              >
+                <MenuItem value="">
+                  <Typography variant="caption">N/A</Typography>
+                </MenuItem>
+                <MenuItem value="Variable">
+                  <Typography variant="caption">Variable</Typography>
+                </MenuItem>
+                <MenuItem value="Attribute">
+                  <Typography variant="caption">Attribute</Typography>
+                </MenuItem>
+              </Select>
+            </FormControl>
+
+            {isProfileTolerance && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formValues.isUnequalProfile}
+                    onChange={(e) =>
+                      onChange({
+                        target: {
+                          name: 'isUnequalProfile',
+                          value: e.target.checked,
+                        },
+                      })
+                    }
+                    name="isUnequalProfile"
+                  />
+                }
+                label="Unequal Tolerances"
+              />
+            )}
+
             <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
@@ -138,26 +183,51 @@ function ItemForm({
                 error={Boolean(errors.nominal)}
                 helperText={errors.nominal && 'Required'}
               />
-              <TextField
-                size="small"
-                label="USL"
-                name="usl"
-                value={formValues.usl}
-                onChange={onChange}
-                disabled={formValues.itemType === 'Attribute'}
-                error={Boolean(errors.usl)}
-                helperText={errors.usl && 'Required'}
-              />
-              <TextField
-                size="small"
-                label="LSL"
-                name="lsl"
-                value={formValues.lsl}
-                onChange={onChange}
-                disabled={formValues.itemType === 'Attribute' || isLSLDisabled}
-                error={Boolean(errors.lsl)}
-                helperText={errors.lsl && 'Required'}
-              />
+              {formValues.isUnequalProfile && isProfileTolerance ? (
+                <>
+                  <TextField
+                    size="small"
+                    label="Upper Tol (+)"
+                    name="upperTolerance"
+                    value={formValues.upperTolerance}
+                    onChange={onChange}
+                    error={Boolean(errors.upperTolerance)}
+                    helperText={errors.upperTolerance && 'Required'}
+                  />
+                  <TextField
+                    size="small"
+                    label="Lower Tol (-)"
+                    name="lowerTolerance"
+                    value={formValues.lowerTolerance}
+                    onChange={onChange}
+                    error={Boolean(errors.lowerTolerance)}
+                    helperText={errors.lowerTolerance && 'Required'}
+                  />
+                </>
+              ) : (
+                <>
+                  <TextField
+                    size="small"
+                    label="USL"
+                    name="usl"
+                    value={formValues.usl}
+                    onChange={onChange}
+                    disabled={formValues.itemType === 'Attribute'}
+                    error={Boolean(errors.usl)}
+                    helperText={errors.usl && 'Required'}
+                  />
+                  <TextField
+                    size="small"
+                    label="LSL"
+                    name="lsl"
+                    value={formValues.lsl}
+                    onChange={onChange}
+                    disabled={formValues.itemType === 'Attribute' || isLSLDisabled}
+                    error={Boolean(errors.lsl)}
+                    helperText={errors.lsl && 'Required'}
+                  />
+                </>
+              )}
             </Stack>
 
             <Tooltip
@@ -172,7 +242,11 @@ function ItemForm({
                   variable data and statistical analysis to ensure part performance. <br />
                   <br />
                   KQP (Key Quality Point)- These line items are key points that ensure part
-                  performance, but do not require statistical analysis.
+                  performance, but do not require statistical analysis. <br />
+                  <br />
+                  GMP (Global Measurement Point)- These line items are global standards across
+                  shared models. <br />
+                  <br />
                 </>
               }
             >
@@ -258,6 +332,10 @@ ItemForm.propTypes = {
     sampleFreq: PropTypes.string,
     reportingFreq: PropTypes.string,
     customToleranceType: PropTypes.string,
+    evaluationMethod: PropTypes.string,
+    isUnequalProfile: PropTypes.bool,
+    upperTolerance: PropTypes.string,
+    lowerTolerance: PropTypes.string,
   }).isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,

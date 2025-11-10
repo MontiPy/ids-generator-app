@@ -14,6 +14,10 @@ export function useInspectionItems() {
     method: '',
     sampleFreq: '',
     reportingFreq: '',
+    evaluationMethod: '',
+    isUnequalProfile: false,
+    upperTolerance: '',
+    lowerTolerance: '',
   });
 
   const [itemErrors, setItemErrors] = useState({});
@@ -38,6 +42,10 @@ export function useInspectionItems() {
       method: '',
       sampleFreq: '',
       reportingFreq: '',
+      evaluationMethod: '',
+      isUnequalProfile: false,
+      upperTolerance: '',
+      lowerTolerance: '',
     });
   };
 

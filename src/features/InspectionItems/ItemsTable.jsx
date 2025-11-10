@@ -10,9 +10,9 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { Edit, Delete } from 'lucide-react';
+import { Edit, Delete, Copy } from 'lucide-react';
 
-export default function ItemsTable({ items, onEdit, onDelete }) {
+export default function ItemsTable({ items, onEdit, onDelete, onDuplicate }) {
   const grouped = Array.from(new Set(items.map((i) => i.groupId)));
 
   return (
@@ -27,6 +27,7 @@ export default function ItemsTable({ items, onEdit, onDelete }) {
             <TableCell sx={{ py: 0.5 }}>USL</TableCell>
             <TableCell sx={{ py: 0.5 }}>LSL</TableCell>
             <TableCell sx={{ py: 0.5 }}>CCP/KQP/GMP</TableCell>
+            <TableCell sx={{ py: 0.5 }}>MP Eval</TableCell>
             <TableCell sx={{ py: 0.5 }}>Method</TableCell>
             <TableCell sx={{ py: 0.5 }}>Sample</TableCell>
             <TableCell sx={{ py: 0.5 }}>Report</TableCell>
@@ -45,15 +46,23 @@ export default function ItemsTable({ items, onEdit, onDelete }) {
                     {groupItem.toleranceType}
                   </TableCell>
                   <TableCell sx={{ py: 0.5 }}>{groupItem.nominal}</TableCell>
-                  <TableCell sx={{ py: 0.5 }}>{groupItem.usl}</TableCell>
-                  <TableCell sx={{ py: 0.5 }}>{groupItem.lsl}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>
+                    {groupItem.isUnequalProfile ? `+${groupItem.upperTolerance}` : groupItem.usl}
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5 }}>
+                    {groupItem.isUnequalProfile ? `-${groupItem.lowerTolerance}` : groupItem.lsl}
+                  </TableCell>
                   <TableCell sx={{ py: 0.5 }}>{groupItem.controlPlan}</TableCell>
+                  <TableCell sx={{ py: 0.5 }}>{groupItem.evaluationMethod || '-'}</TableCell>
                   <TableCell sx={{ py: 0.5 }}>{groupItem.method}</TableCell>
                   <TableCell sx={{ py: 0.5 }}>{groupItem.sampleFreq}</TableCell>
                   <TableCell sx={{ py: 0.5 }}>{groupItem.reportingFreq}</TableCell>
                   <TableCell sx={{ py: 0.5 }}>
                     <IconButton size="small" onClick={() => onEdit(gid)}>
                       <Edit size={14} />
+                    </IconButton>
+                    <IconButton size="small" onClick={() => onDuplicate(gid)}>
+                      <Copy size={14} />
                     </IconButton>
                     <IconButton size="small" onClick={() => onDelete(gid)}>
                       <Delete size={14} />
@@ -69,6 +78,7 @@ export default function ItemsTable({ items, onEdit, onDelete }) {
                       }${String.fromCharCode(97 + j)}`}</TableCell>
                       <TableCell sx={{ py: 0.5 }}>{`${item.name} - ${item.subitem}`}</TableCell>
                       <TableCell sx={{ py: 0.5 }}>{item.toleranceType}</TableCell>
+                      <TableCell sx={{ py: 0.5 }} />
                       <TableCell sx={{ py: 0.5 }} />
                       <TableCell sx={{ py: 0.5 }} />
                       <TableCell sx={{ py: 0.5 }} />

@@ -1,4 +1,4 @@
-import { nonLSLTolerances } from '../constants/tolerance';
+import { nonLSLTolerances, tolWithMinMax } from '../constants/tolerance';
 
 export const validatePartDetails = (info) => {
   const errors = {};
@@ -46,8 +46,23 @@ export const validateItemFields = (values) => {
     'reportingFreq',
   ];
 
-  if (values.itemType !== 'Attribute') {
-    required.push('usl');
+  // Check if this is an unequal profile tolerance
+  const isProfileTolerance = tolWithMinMax.includes(values.toleranceType);
+  const unequalProfile = values.isUnequalProfile && isProfileTolerance;
+
+  if (unequalProfile) {
+    // For unequal profile tolerances, require upper and lower tolerance
+    if (!values.upperTolerance || values.upperTolerance.toString().trim() === '') {
+      errors.upperTolerance = true;
+    }
+    if (!values.lowerTolerance || values.lowerTolerance.toString().trim() === '') {
+      errors.lowerTolerance = true;
+    }
+  } else {
+    // For non-unequal tolerances, use standard validation
+    if (values.itemType !== 'Attribute') {
+      required.push('usl');
+    }
   }
 
   required.forEach((field) => {
@@ -56,11 +71,14 @@ export const validateItemFields = (values) => {
     }
   });
 
-  const lslNeeded =
-    values.itemType !== 'Attribute' && !nonLSLTolerances.includes(values.toleranceType);
+  // LSL validation (only if not unequal profile)
+  if (!unequalProfile) {
+    const lslNeeded =
+      values.itemType !== 'Attribute' && !nonLSLTolerances.includes(values.toleranceType);
 
-  if (lslNeeded && (!values.lsl || values.lsl.toString().trim() === '')) {
-    errors.lsl = true;
+    if (lslNeeded && (!values.lsl || values.lsl.toString().trim() === '')) {
+      errors.lsl = true;
+    }
   }
 
   if (
@@ -84,18 +102,31 @@ export const areItemFieldsComplete = (values) => {
     'reportingFreq',
   ];
 
-  if (values.itemType !== 'Attribute') {
-    required.push('usl');
+  // Check if this is an unequal profile tolerance
+  const isProfileTolerance = tolWithMinMax.includes(values.toleranceType);
+  const unequalProfile = values.isUnequalProfile && isProfileTolerance;
+
+  if (unequalProfile) {
+    // For unequal profile tolerances, require upper and lower tolerance
+    required.push('upperTolerance', 'lowerTolerance');
+  } else {
+    // For non-unequal tolerances, use standard validation
+    if (values.itemType !== 'Attribute') {
+      required.push('usl');
+    }
   }
 
   const baseComplete = required.every(
     (field) => values[field] && values[field].toString().trim() !== '',
   );
 
-  const lslNeeded =
-    values.itemType !== 'Attribute' && !nonLSLTolerances.includes(values.toleranceType);
-
-  const lslComplete = !lslNeeded || (values.lsl && values.lsl.toString().trim() !== '');
+  // LSL validation (only if not unequal profile)
+  let lslComplete = true;
+  if (!unequalProfile) {
+    const lslNeeded =
+      values.itemType !== 'Attribute' && !nonLSLTolerances.includes(values.toleranceType);
+    lslComplete = !lslNeeded || (values.lsl && values.lsl.toString().trim() !== '');
+  }
 
   const customTolComplete =
     values.toleranceType !== 'Other' ||

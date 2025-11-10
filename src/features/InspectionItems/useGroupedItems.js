@@ -18,6 +18,10 @@ export default function useGroupedItems() {
       method,
       sampleFreq,
       reportingFreq,
+      evaluationMethod,
+      isUnequalProfile,
+      upperTolerance,
+      lowerTolerance,
     } = formValues;
 
     const subs = tolWithXY.includes(toleranceType)
@@ -39,6 +43,10 @@ export default function useGroupedItems() {
       method,
       sampleFreq,
       reportingFreq,
+      evaluationMethod: evaluationMethod || '',
+      isUnequalProfile: isUnequalProfile || false,
+      upperTolerance: upperTolerance || '',
+      lowerTolerance: lowerTolerance || '',
     });
 
     return subs.map(createItem);
@@ -62,11 +70,18 @@ export default function useGroupedItems() {
 
     if (editGroupId) {
       setItems((prev) => {
+        // Find the index of the first item with this groupId to maintain position
+        const firstIndex = prev.findIndex((i) => i.groupId === editGroupId);
         const others = prev.filter((i) => i.groupId !== editGroupId);
-        return [
-          ...others,
-          ...generateItems(updatedFormValues, editGroupId, tolWithXY, tolWithMinMax),
-        ];
+        const updatedItems = generateItems(
+          updatedFormValues,
+          editGroupId,
+          tolWithXY,
+          tolWithMinMax,
+        );
+
+        // Insert updated items at the original position
+        return [...others.slice(0, firstIndex), ...updatedItems, ...others.slice(firstIndex)];
       });
       setEditGroupId(null);
     } else {
@@ -93,6 +108,10 @@ export default function useGroupedItems() {
       sampleFreq: first.sampleFreq,
       reportingFreq: first.reportingFreq,
       itemType: first.itemType || 'Variable',
+      evaluationMethod: first.evaluationMethod || '',
+      isUnequalProfile: first.isUnequalProfile || false,
+      upperTolerance: first.upperTolerance || '',
+      lowerTolerance: first.lowerTolerance || '',
     });
     setEditGroupId(groupId);
   };
@@ -105,6 +124,17 @@ export default function useGroupedItems() {
     }
   };
 
+  const handleDuplicate = (groupId) => {
+    const groupItems = items.filter((i) => i.groupId === groupId);
+    const newGroupId = uuidv4();
+    const duplicatedItems = groupItems.map((item) => ({
+      ...item,
+      id: uuidv4(),
+      groupId: newGroupId,
+    }));
+    setItems((prev) => [...prev, ...duplicatedItems]);
+  };
+
   return {
     items,
     setItems,
@@ -113,5 +143,6 @@ export default function useGroupedItems() {
     handleAddOrUpdate,
     handleEdit,
     handleDelete,
+    handleDuplicate,
   };
 }

@@ -29,7 +29,7 @@ export const toleranceIcons = {
   Other: '/icons/question-mark-circle.svg',
 };
 
-export const controlPlans = ['CCP', 'KQP', 'CMP', 'N/A'];
+export const controlPlans = ['CCP', 'KQP', 'GMP', 'N/A'];
 
 export const nonLSLTolerances = [
   'Position',

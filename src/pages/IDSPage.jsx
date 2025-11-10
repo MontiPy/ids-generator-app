@@ -34,7 +34,8 @@ export default function IDSPage() {
     validateItems,
   } = useInspectionItems();
 
-  const { items, editGroupId, handleAddOrUpdate, handleEdit, handleDelete } = useGroupedItems();
+  const { items, editGroupId, handleAddOrUpdate, handleEdit, handleDelete, handleDuplicate } =
+    useGroupedItems();
 
   const handleError = (errorMessage) => {
     setError(errorMessage);
@@ -101,6 +102,7 @@ export default function IDSPage() {
             <ItemsTable
               items={items}
               onEdit={(gid) => handleEdit(gid, setFormValues)}
+              onDuplicate={handleDuplicate}
               onDelete={(gid) => handleDelete(gid, resetFormValues)}
             />
           </Box>
